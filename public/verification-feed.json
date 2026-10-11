@@ -1,0 +1,25 @@
+{
+  "site": "vip10",
+  "code": "VIP10",
+  "events": [
+    {
+      "eventKey": "vip10-2026-10-09-manual-tirzepatide-10mg-pass",
+      "observedAt": "2026-10-09T23:06:30.000Z",
+      "lineItems": [
+        {
+          "name": "Tirzepatide 10mg — Single vial",
+          "quantity": 1,
+          "unitPrice": 60
+        }
+      ],
+      "totals": {
+        "currency": "CAD",
+        "subtotal": 60,
+        "discount": 6,
+        "tax": null,
+        "total": null
+      },
+      "publicEvidenceUrl": "https://growthguysvip10.ca/manus-storage/verification-events/2026-10-09/vip10-cart-1791587949892_48fcf9db.webp"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "/": "/index.html",
+  "/verification-archive/": "/verification-archive/index.html",
+  "/api/current-record": "/api/current-record.json",
+  "/verification-feed.json": "/verification-feed.json",
+  "/feed.xml": "/feed.xml"
+}

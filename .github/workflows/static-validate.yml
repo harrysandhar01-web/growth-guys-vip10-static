@@ -1,0 +1,20 @@
+name: Validate static staging output
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate required static files and manifest
+        run: |
+          test -s public/index.html
+          test -s public/api/current-record.json
+          test -s public/verification-feed.json
+          test -s public/feed.xml
+          test -s public/sitemap.xml
+          test -s public/static-route-map.json
+          node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('public/deployment-manifest.json')); if(m.deploymentState !== 'built_not_deployed') throw new Error('unexpected deployment state'); if(!m.code || !m.canonicalOrigin) throw new Error('incomplete manifest');"
