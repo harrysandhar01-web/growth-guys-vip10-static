@@ -13,4 +13,4 @@ The repository becomes eligible for a no-downtime cutover only after full route,
 
 ## Intended destination
 
-The intended canonical public hostname is **growthguysvip10.ca**, but no GitHub Pages CNAME file or DNS record has been configured. The generated static build is located in the  directory.
+The intended canonical public hostname is **growthguysvip10.ca**, but no GitHub Pages CNAME file or DNS record has been configured. The generated static build is in the public directory.
