@@ -17,6 +17,7 @@ jobs:
           test -s public/feed.xml
           test -s public/sitemap.xml
           test -s public/static-route-map.json
+          test -f public/.nojekyll
           node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('public/deployment-manifest.json')); if(m.deploymentState !== 'built_not_deployed') throw new Error('unexpected deployment state'); if(!m.code || !m.canonicalOrigin) throw new Error('incomplete manifest');"
       - name: Validate canonical public-route snapshot
         run: node scripts/validate-canonical-snapshot.mjs public

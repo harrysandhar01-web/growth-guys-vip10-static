@@ -97,6 +97,7 @@ if (pageUrls.length === 0) throw new Error("empty_canonical_sitemap");
 
 await rm(publicDir, { recursive: true, force: true });
 await mkdir(publicDir, { recursive: true });
+await put(".nojekyll", "");
 await mkdir("source-inventory", { recursive: true });
 await writeFile("source-inventory/live-sitemap-2026-10-12.xml", sitemap);
 
