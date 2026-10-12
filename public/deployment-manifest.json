@@ -3,7 +3,7 @@
   "profileId": "vip10",
   "code": "VIP10",
   "canonicalOrigin": "https://growthguysvip10.ca",
-  "generatedAt": "2026-10-12T17:03:03.257Z",
+  "generatedAt": "2026-10-12T17:07:58.956Z",
   "source": "canonical_public_html_snapshot",
   "eventKey": "vip10-2026-10-09-manual-tirzepatide-10mg-pass",
   "recordPublishedAt": null,
@@ -215,11 +215,12 @@
   },
   "deploymentState": "built_not_deployed",
   "canonicalSnapshot": {
-    "generatedAt": "2026-10-12T17:03:03.257Z",
+    "generatedAt": "2026-10-12T17:07:58.956Z",
     "publicRouteCount": 199,
     "nextAssetCount": 125,
-    "currentRecordEventKey": null,
-    "currentRecordObservedAt": null,
+    "publicHostedAssetCount": 19,
+    "currentRecordEventKey": "vip10-2026-10-09-manual-tirzepatide-10mg-pass",
+    "currentRecordObservedAt": "2026-10-09T23:06:30.000Z",
     "sourceOrigin": "https://growthguysvip10.ca"
   }
 }

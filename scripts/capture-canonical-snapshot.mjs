@@ -69,46 +69,65 @@ async function mapLimit(items, mapper) {
   await Promise.all(workers);
 }
 
-function collectNextAssets(html) {
-  const assets = new Set();
+function collectPublicAssets(html) {
+  const nextAssets = new Set();
+  const hostedAssets = new Set();
   for (const match of html.matchAll(/(?:src|href)=["']([^"']+)["']/g)) {
     const raw = match[1];
-    if (!raw.startsWith("/_next/")) continue;
+    if (!(raw.startsWith("/_next/") || raw.startsWith("/manus-storage/"))) continue;
     const url = new URL(raw, canonicalOrigin);
     if (url.search) continue;
-    assets.add(url.pathname);
+    if (url.pathname.startsWith("/_next/")) nextAssets.add(url.pathname);
+    if (url.pathname.startsWith("/manus-storage/")) hostedAssets.add(url.pathname);
   }
-  return assets;
+  return { nextAssets, hostedAssets };
+}
+
+const manifestPath = join(publicDir, "deployment-manifest.json");
+let priorManifest = {};
+try {
+  priorManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+} catch {
+  // A first snapshot has no earlier static manifest to preserve.
 }
 
 const sitemap = await fetchRequired(`${canonicalOrigin}/sitemap.xml`);
 const pageUrls = sitemapUrls(sitemap);
 if (pageUrls.length === 0) throw new Error("empty_canonical_sitemap");
 
-await rm(join(publicDir, "snapshot-pages"), { recursive: true, force: true });
+await rm(publicDir, { recursive: true, force: true });
 await mkdir(publicDir, { recursive: true });
 await mkdir("source-inventory", { recursive: true });
 await writeFile("source-inventory/live-sitemap-2026-10-12.xml", sitemap);
 
 const routeMap = {};
-const assets = new Set();
+const nextAssets = new Set();
+const hostedAssets = new Set();
 await mapLimit(pageUrls, async (url, index) => {
   const html = await fetchRequired(url);
   const pathname = safePathname(url);
   const output = htmlFile(pathname);
   await put(output, html);
   routeMap[pathname === "/" ? "/" : `${pathname.replace(/\/+$/, "")}/`] = `/${output}`;
-  for (const asset of collectNextAssets(html)) assets.add(asset);
+  const assets = collectPublicAssets(html);
+  for (const asset of assets.nextAssets) nextAssets.add(asset);
+  for (const asset of assets.hostedAssets) hostedAssets.add(asset);
   if ((index + 1) % 25 === 0 || index + 1 === pageUrls.length) {
     console.log(`pages=${index + 1}/${pageUrls.length}`);
   }
 });
 
-await mapLimit([...assets].sort(), async (pathname, index) => {
-  const bytes = await fetchRequired(`${canonicalOrigin}${pathname}`, "bytes");
-  await put(assetFile(pathname), bytes);
-  if ((index + 1) % 25 === 0 || index + 1 === assets.size) {
-    console.log(`assets=${index + 1}/${assets.size}`);
+await mapLimit([...nextAssets].sort(), async (pathname, index) => {
+  await put(assetFile(pathname), await fetchRequired(`${canonicalOrigin}${pathname}`, "bytes"));
+  if ((index + 1) % 25 === 0 || index + 1 === nextAssets.size) {
+    console.log(`next_assets=${index + 1}/${nextAssets.size}`);
+  }
+});
+
+await mapLimit([...hostedAssets].sort(), async (pathname, index) => {
+  await put(assetFile(pathname), await fetchRequired(`${canonicalOrigin}${pathname}`, "bytes"));
+  if ((index + 1) % 10 === 0 || index + 1 === hostedAssets.size) {
+    console.log(`hosted_assets=${index + 1}/${hostedAssets.size}`);
   }
 });
 
@@ -120,30 +139,35 @@ const dataRoutes = {
   "/sitemap.xml": "/sitemap.xml",
 };
 for (const [route, output] of Object.entries(dataRoutes)) {
-  const responseType = output.endsWith(".json") || output.endsWith(".xml") || output.endsWith(".txt") ? "text" : "bytes";
-  await put(output.slice(1), await fetchRequired(`${canonicalOrigin}${route}`, responseType));
+  await put(output.slice(1), await fetchRequired(`${canonicalOrigin}${route}`));
   routeMap[route] = output;
 }
 
 const currentRecord = JSON.parse(await readFile(join(publicDir, "api/current-record.json"), "utf8"));
-const manifestPath = join(publicDir, "deployment-manifest.json");
-const prior = JSON.parse(await readFile(manifestPath, "utf8"));
+const acceptedRecord = currentRecord?.record ?? currentRecord;
 const manifest = {
-  ...prior,
+  ...priorManifest,
   generatedAt,
   canonicalOrigin,
   source: "canonical_public_html_snapshot",
   deploymentState: "built_not_deployed",
+  code: acceptedRecord?.code ?? priorManifest.code ?? null,
   staticRoutes: Object.fromEntries(Object.entries(routeMap).sort(([a], [b]) => a.localeCompare(b))),
   canonicalSnapshot: {
     generatedAt,
     publicRouteCount: pageUrls.length,
-    nextAssetCount: assets.size,
-    currentRecordEventKey: currentRecord?.record?.eventKey ?? null,
-    currentRecordObservedAt: currentRecord?.record?.observedAt ?? null,
+    nextAssetCount: nextAssets.size,
+    publicHostedAssetCount: hostedAssets.size,
+    currentRecordEventKey: acceptedRecord?.eventKey ?? acceptedRecord?.event_key ?? null,
+    currentRecordObservedAt: acceptedRecord?.observedAt ?? acceptedRecord?.observed_at ?? null,
     sourceOrigin: canonicalOrigin,
   },
 };
 await put("static-route-map.json", `${JSON.stringify(manifest.staticRoutes, null, 2)}\n`);
 await put("deployment-manifest.json", `${JSON.stringify(manifest, null, 2)}\n`);
-console.log(JSON.stringify({ publicRouteCount: pageUrls.length, nextAssetCount: assets.size, deploymentState: manifest.deploymentState }));
+console.log(JSON.stringify({
+  publicRouteCount: pageUrls.length,
+  nextAssetCount: nextAssets.size,
+  publicHostedAssetCount: hostedAssets.size,
+  deploymentState: manifest.deploymentState,
+}));
