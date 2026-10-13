@@ -163,6 +163,14 @@ const manifest = {
     currentRecordObservedAt: acceptedRecord?.observedAt ?? acceptedRecord?.observed_at ?? null,
     sourceOrigin: canonicalOrigin,
   },
+  dynamicControlPlaneExcluded: [
+    "owner authentication",
+    "original-evidence retention",
+    "validator acceptance",
+    "verification publication",
+    "scheduled verification",
+    "database-backed current record",
+  ],
 };
 await put("static-route-map.json", `${JSON.stringify(manifest.staticRoutes, null, 2)}\n`);
 await put("deployment-manifest.json", `${JSON.stringify(manifest, null, 2)}\n`);

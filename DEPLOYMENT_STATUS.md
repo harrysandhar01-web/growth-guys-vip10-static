@@ -13,6 +13,6 @@
 
 ## Boundary
 
-This is a private route-parity staging artifact. It may contain a read-only canonical public HTML snapshot plus static record/feed files, but it does **not** replace the dynamic verification backend, database, owner authentication, original-evidence storage, validator, scheduler, or publication controls.
+This is a private route-parity staging artifact. It may contain a read-only canonical public HTML snapshot plus static record/feed files, but it does **not** replace the dynamic verification backend, database-backed current record, owner authentication, original-evidence storage, validator-gated acceptance, scheduler, or publication controls.
 
 No domain cutover is permitted until route/content/metadata/JSON-LD, canonical and alias redirects, sitemap/feed, dynamic control-plane behavior, crawler readback, and rollback behavior are separately proven.
