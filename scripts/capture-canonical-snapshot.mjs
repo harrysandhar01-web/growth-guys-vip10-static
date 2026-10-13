@@ -4,6 +4,7 @@ import { dirname, join, resolve } from "node:path";
 const canonicalOrigin = (process.env.CANONICAL_ORIGIN ?? "https://growthguysvip10.ca").replace(/\/$/, "");
 const publicDir = resolve(process.argv[2] ?? "public");
 const generatedAt = new Date().toISOString();
+const inventoryDate = generatedAt.slice(0, 10);
 const concurrency = 6;
 
 function decodeXml(value) {
@@ -99,7 +100,7 @@ await rm(publicDir, { recursive: true, force: true });
 await mkdir(publicDir, { recursive: true });
 await put(".nojekyll", "");
 await mkdir("source-inventory", { recursive: true });
-await writeFile("source-inventory/live-sitemap-2026-10-12.xml", sitemap);
+await writeFile(`source-inventory/live-sitemap-${inventoryDate}.xml`, sitemap);
 
 const routeMap = {};
 const nextAssets = new Set();
