@@ -1,0 +1,21 @@
+{
+  "site": "VIP10",
+  "code": "VIP10",
+  "observation_date": "2026-10-18",
+  "timezone": "America/Vancouver",
+  "product": "GHK-Cu 100mg, single vial",
+  "subtotal_cad": 55.0,
+  "discount_cad": 5.5,
+  "shipping_cad": 20.0,
+  "bitcoin_discount_visible_cad": 9.9,
+  "bitcoin_selected": false,
+  "total_cad": 59.6,
+  "merchant_message": "Coupon code applied successfully.",
+  "evidence_file": "final-accepted-cart.html",
+  "evidence_sha256": "a3a86d072e0089951b8ea5a3e24beb898b44ac516836560e5e3b5854aec04a53",
+  "cart_cleaned": true,
+  "checkout_entered": false,
+  "payment_entered": false,
+  "publication_status": "cart-observed-pending-owner-acceptance",
+  "notes": "Bitcoin discount was visible in the cart, but Bitcoin was not selected. This is not a published or accepted verification record."
+}
