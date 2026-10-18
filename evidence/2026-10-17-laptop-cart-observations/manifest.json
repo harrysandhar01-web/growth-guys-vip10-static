@@ -1,0 +1,54 @@
+{
+  "packageVersion": 1,
+  "purpose": "Private evidence transfer only; not a publication receipt",
+  "observationDateVancouver": "2026-10-17",
+  "boundary": "Cart-only; no checkout, payment, identity, address, order, or purchase",
+  "records": [
+    {
+      "site": "VIP10",
+      "code": "VIP10",
+      "product": "GHK-Cu 100mg - single vial",
+      "productUrl": "https://growthguys.com/shop/ghk-cu-100mg/",
+      "cartUrl": "https://growthguys.com/cart/",
+      "observedAtVancouver": "2026-10-17T23:08:07-07:00",
+      "acceptedMessage": "Coupon code applied successfully.",
+      "subtotalCad": 55.0,
+      "couponDiscountCad": 5.5,
+      "shippingCad": 20.0,
+      "bitcoinDiscountShownCad": 9.9,
+      "taxCad": 0.0,
+      "totalCad": 59.6,
+      "evidenceType": "browser-document-render",
+      "evidenceFile": "vip10/final-accepted-cart.html",
+      "cartCleanup": "confirmed empty after capture",
+      "crossContaminationHandled": [
+        "Removed pre-existing Retatrutide item before accepted observation",
+        "No other coupon present when VIP10 was applied"
+      ],
+      "sha256": "2ef4810bf49e46c70a1e14aa097ca39b1e55f7bbfe9cbfdd47bab7bb60959666"
+    },
+    {
+      "site": "GROWTH10",
+      "code": "GROWTH10",
+      "product": "Aromasin (Exemestane) Tablets 12.5mg - single item",
+      "productUrl": "https://growthguys.com/shop/aromasin/",
+      "resolvedProductUrl": "https://growthguys.com/shop/aromasin-tablets/",
+      "cartUrl": "https://growthguys.com/cart/",
+      "observedAtVancouver": "2026-10-17T23:09:35-07:00",
+      "acceptedMessage": "Coupon code applied successfully.",
+      "subtotalCad": 70.0,
+      "couponDiscountCad": 7.0,
+      "shippingCad": 20.0,
+      "bitcoinDiscountShownCad": 12.6,
+      "taxCad": 0.0,
+      "totalCad": 70.4,
+      "evidenceType": "browser-document-render",
+      "evidenceFile": "growth10/final-accepted-cart.html",
+      "cartCleanup": "confirmed empty after capture",
+      "crossContaminationHandled": [
+        "Removed carried-over VIP10 coupon before applying GROWTH10"
+      ],
+      "sha256": "9055027ac0057c31f3420a65040a7417c4022b6da031eb8f2b284f510dcf0c85"
+    }
+  ]
+}
