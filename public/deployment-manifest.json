@@ -215,12 +215,12 @@
   },
   "deploymentState": "built_not_deployed",
   "canonicalSnapshot": {
-    "generatedAt": "2026-10-13T22:28:44.475Z",
+    "generatedAt": "2026-10-19T16:29:50.000Z",
     "publicRouteCount": 199,
     "nextAssetCount": 125,
     "publicHostedAssetCount": 0,
-    "currentRecordEventKey": null,
-    "currentRecordObservedAt": "2026-10-13T10:44:15.000Z",
+    "currentRecordEventKey": "vip10-observed-20261019-161519",
+    "currentRecordObservedAt": "2026-10-19T16:15:19.000Z",
     "sourceOrigin": "https://growthguysvip10.ca"
   },
   "dynamicControlPlaneExcluded": [
