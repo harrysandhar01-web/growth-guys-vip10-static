@@ -21,3 +21,5 @@ jobs:
           node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('public/deployment-manifest.json')); if(m.deploymentState !== 'built_not_deployed') throw new Error('unexpected deployment state'); if(!m.code || !m.canonicalOrigin) throw new Error('incomplete manifest');"
       - name: Validate canonical public-route snapshot
         run: node scripts/validate-canonical-snapshot.mjs public
+      - name: Validate current record projection
+        run: node scripts/validate-current-record-projection.mjs public
