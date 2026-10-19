@@ -1,1 +1,18 @@
-{"code":"VIP10","record_reference":"vip10-observed-20261013-064415","record_url":"/verification-archive/vip10-observed-20261013-064415/","status":"accepted","observed_at":"2026-10-13T10:44:15.000Z","method":"Verified at checkout","product_name":"Tirzepatide 10mg - Single vial","product_url":"https://growthguys.com/shop/tirzepatide/?attribute_pa_packaging=single-vial","currency":"CAD","cart_subtotal":"60.00","discount_amount":"6.00","gateway_state":"unknown","tax_state":"displayed","shipping_state":"not_verified","evidence_url":"/evidence/vip10-observed-20261013-064415/","scope":"Documented pre-payment cart observation; no purchase was made."}
+{
+  "code": "VIP10",
+  "record_reference": "vip10-observed-20261018-230318",
+  "record_url": "/verification-archive/vip10-observed-20261018-230318/",
+  "status": "owner-reviewed",
+  "observed_at": "2026-10-18T23:03:18.177Z",
+  "method": "Owner-approved cart-only observation",
+  "product_name": "GHK-Cu 100mg - Single vial",
+  "product_url": "https://growthguys.com/shop/ghk-cu-100mg/",
+  "currency": "CAD",
+  "cart_subtotal": "55.00",
+  "discount_amount": "5.50",
+  "observed_total": "59.60",
+  "payment_method_selected": false,
+  "visible_other_adjustment": "Bitcoin Discount (20%)",
+  "evidence_url": "/evidence/vip10-observed-20261018-230318/",
+  "scope": "Documented pre-payment cart observation; no identity, address, payment, or purchase was submitted."
+}
