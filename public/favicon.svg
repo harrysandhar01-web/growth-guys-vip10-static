@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="forestGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#143d26"/>
+      <stop offset="100%" stop-color="#1a5c38"/>
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#forestGrad)"/>
+  <g transform="translate(32,32)">
+    <ellipse rx="22" ry="8" fill="none" stroke="#e6f4ed" stroke-width="2" stroke-opacity="0.4" transform="rotate(30)"/>
+    <ellipse rx="22" ry="8" fill="none" stroke="#e6f4ed" stroke-width="2" stroke-opacity="0.4" transform="rotate(-30)"/>
+    <circle cx="0" cy="0" r="5" fill="url(#amberGrad)"/>
+    <circle cx="19" cy="-11" r="3" fill="#e6f4ed"/>
+    <circle cx="-19" cy="11" r="3" fill="#e6f4ed"/>
+    <circle cx="19" cy="11" r="2.5" fill="url(#amberGrad)"/>
+    <circle cx="-19" cy="-11" r="2.5" fill="url(#amberGrad)"/>
+  </g>
+</svg>
