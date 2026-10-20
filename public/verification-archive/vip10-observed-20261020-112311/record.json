@@ -1,0 +1,17 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-observed-20261020-112311",
+  "record_url": "/verification-archive/vip10-observed-20261020-112311/",
+  "status": "owner-reviewed",
+  "observed_at": "2026-10-20T11:23:11.000Z",
+  "method": "Owner-approved cart-only observation",
+  "product_name": "GHK-Cu 100mg - Single vial",
+  "product_url": "https://growthguys.com/shop/ghk-cu-100mg/",
+  "currency": "CAD",
+  "cart_subtotal": "55.00",
+  "discount_amount": "5.50",
+  "observed_total": "49.50",
+  "payment_method_selected": false,
+  "evidence_url": "/evidence/vip10-observed-20261020-112311/",
+  "scope": "Documented pre-payment cart observation; no identity, address, payment, or purchase was submitted."
+}
