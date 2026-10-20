@@ -465,8 +465,8 @@
       "recordReference": "vip10-observed-20261020-114144",
       "recordUrl": "/verification-archive/vip10-observed-20261020-114144/",
       "checkedAt": "2026-10-20T11:41:44.000Z",
-      "status": "owner reviewed",
-      "recordType": "Owner-approved cart-only observation",
+      "status": "Verified at checkout",
+      "recordType": "Verified at checkout",
       "productName": "GHK-Cu 100mg - Single vial",
       "productUrl": "https://growthguys.com/shop/ghk-cu-100mg/",
       "currency": "CAD",
@@ -488,7 +488,7 @@
     "latestRecordedRun": {
       "recordReference": "vip10-observed-20261020-114144",
       "checkedAt": "2026-10-20T11:41:44.000Z",
-      "status": "owner reviewed"
+      "status": "Verified at checkout"
     },
     "lastAcceptedResult": {
       "recordReference": "vip10-observed-20261013-064415",
