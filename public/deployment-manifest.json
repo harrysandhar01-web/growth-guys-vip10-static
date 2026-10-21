@@ -3,10 +3,10 @@
   "profileId": "vip10",
   "code": "VIP10",
   "canonicalOrigin": "https://growthguysvip10.ca",
-  "generatedAt": "2026-10-13T22:28:44.475Z",
+  "generatedAt": "2026-10-21T04:08:06.000Z",
   "source": "canonical_public_html_snapshot",
-  "eventKey": "vip10-2026-10-09-manual-tirzepatide-10mg-pass",
-  "recordPublishedAt": null,
+  "eventKey": "vip10-observed-20261021-040806",
+  "recordPublishedAt": "2026-10-21T04:08:06.000Z",
   "staticRoutes": {
     "/": "/index.html",
     "/about-the-desk/": "/about-the-desk/index.html",
