@@ -494,6 +494,23 @@
       "taxState": "displayed",
       "shippingState": "displayed",
       "evidenceUrl": "/verification-archive/vip10-observed-20261021-040806/"
+    },
+    {
+      "recordReference": "vip10-observed-20261022-040824",
+      "recordUrl": "/verification-archive/vip10-observed-20261022-040824/",
+      "checkedAt": "2026-10-22T04:08:24.000Z",
+      "status": "Verified at checkout",
+      "recordType": "Verified at checkout",
+      "productName": "Thymosin Alpha-1 12.5mg - Single vial",
+      "productUrl": "https://growthguys.com/shop/thymosin-alpha-1-12-5mg/",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "7.00",
+      "cartSubtotal": "70.00",
+      "gatewayState": "not_selected",
+      "taxState": "displayed",
+      "shippingState": "displayed",
+      "evidenceUrl": "/verification-archive/vip10-observed-20261022-040824/"
     }
   ],
   "health": {
