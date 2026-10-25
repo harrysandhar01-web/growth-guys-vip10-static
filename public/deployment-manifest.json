@@ -213,7 +213,7 @@
     "/vip10-evidence-index/": "/vip10-evidence-index/index.html",
     "/vip10/": "/vip10/index.html"
   },
-  "deploymentState": "static_projection_ready",
+  "deploymentState": "built_not_deployed",
   "canonicalSnapshot": {
     "generatedAt": "2026-10-19T16:29:50.000Z",
     "publicRouteCount": 201,
