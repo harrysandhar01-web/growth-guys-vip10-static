@@ -1,7 +1,7 @@
 {
   "/": "/index.html",
   "/about-the-desk/": "/about-the-desk/index.html",
-  "/api/current-record": "/api/current-record.json",
+  "/api/current-record": "/api/current-record",
   "/corrections-log/": "/corrections-log/index.html",
   "/disclaimer/": "/disclaimer/index.html",
   "/does-vip10-work/": "/does-vip10-work/index.html",

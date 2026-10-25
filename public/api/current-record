@@ -1,0 +1,17 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-observed-20261025-134530",
+  "record_url": "/verification-archive/vip10-observed-20261025-134530/",
+  "status": "Verified at checkout",
+  "observed_at": "2026-10-25T13:45:30Z",
+  "method": "Browser cart-only verification",
+  "product_name": "BPC-157 5mg - Single vial",
+  "product_url": "https://growthguys.com/shop/bpc-157-5mg/",
+  "currency": "CAD",
+  "cart_subtotal": "40.00",
+  "discount_amount": "4.00",
+  "observed_total": "36.00",
+  "payment_method_selected": false,
+  "evidence_url": "/verification-archive/vip10-observed-20261025-134530/",
+  "scope": "Documented pre-payment cart observation; no identity, address, payment, or purchase was submitted."
+}
