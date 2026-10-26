@@ -202,5 +202,6 @@
   "/verification-ledger/": "/verification-ledger/index.html",
   "/verification-protocol/": "/verification-protocol/index.html",
   "/vip10-evidence-index/": "/vip10-evidence-index/index.html",
-  "/vip10/": "/vip10/index.html"
+  "/vip10/": "/vip10/index.html",
+  "/guides/reddit-code-mention-vs-current-cart-record/": "/guides/reddit-code-mention-vs-current-cart-record/index.html"
 }
