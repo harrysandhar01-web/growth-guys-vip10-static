@@ -1,0 +1,113 @@
+name: Owner manual publish — VIP10
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        required: true
+        default: correction
+        options: [correction, new]
+        description: Correct existing record or enter new observation
+      observed_eastern:
+        type: string
+        required: true
+        description: "Actual Eastern observation time: YYYY-MM-DD HH:MM"
+      evidence_url:
+        type: string
+        description: "Existing public evidence link; optional for correction"
+      product_name:
+        type: string
+        description: "Product; optional for correction"
+      cart_subtotal:
+        type: string
+        description: "CAD subtotal; optional for correction"
+      discount_amount:
+        type: string
+        description: "CAD discount; optional for correction"
+      displayed_total:
+        type: string
+        description: "CAD total; optional for correction"
+      owner_reason:
+        type: string
+        required: true
+        description: Why this evidence-backed update is needed
+      owner_confirmed:
+        type: boolean
+        required: true
+        default: false
+        description: I checked original cart evidence and approve publication
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: owner-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.actor == 'harrysandhar01-web' && inputs.owner_confirmed == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build evidence-backed owner update
+        id: owner
+        env:
+          SITE_PROFILE: vip10
+          PUBLICATION_MODE: ${{ inputs.mode }}
+          OBSERVED_EASTERN: ${{ inputs.observed_eastern }}
+          EVIDENCE_URL: ${{ inputs.evidence_url }}
+          PRODUCT_NAME: ${{ inputs.product_name }}
+          CART_SUBTOTAL: ${{ inputs.cart_subtotal }}
+          DISCOUNT_AMOUNT: ${{ inputs.discount_amount }}
+          DISPLAYED_TOTAL: ${{ inputs.displayed_total }}
+          OWNER_REASON: ${{ inputs.owner_reason }}
+          OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
+        run: |
+          node --check scripts/owner-manual-publish.mjs
+          node scripts/owner-manual-publish.mjs
+      - name: Write directly to production source
+        env:
+          RECORD: ${{ steps.owner.outputs.record_reference }}
+        run: |
+          set -euo pipefail
+          test -n "$RECORD"
+          grep -q "$RECORD" public/api/current-record.json
+          grep -q "$RECORD" public/index.html
+          git config user.name "Owner-Approved GitHub Publication"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/
+          git diff --cached --quiet && exit 1
+          git commit -m "Owner approved vip10 record $RECORD"
+          git push origin HEAD:main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+      - name: Deploy to actual GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+      - name: Confirm public record
+        env:
+          RECORD: ${{ steps.owner.outputs.record_reference }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://growthguysvip10.ca/api/current-record.json?check=$GITHUB_RUN_ID-$attempt" -o /tmp/readback.json || true
+            curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://growthguysvip10.ca/?check=$GITHUB_RUN_ID-$attempt" -o /tmp/readback.html || true
+            if node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync("/tmp/readback.json"));const h=fs.readFileSync("/tmp/readback.html","utf8");if(r.record_reference!==process.env.RECORD||!h.includes("data-owner-current-record="+String.fromCharCode(34)+process.env.RECORD+String.fromCharCode(34)))process.exit(1)'; then
+              echo "LIVE_CONFIRMED https://growthguysvip10.ca/owner-records/$RECORD/"
+              exit 0
+            fi
+            sleep 8
+          done
+          echo "::error::Production readback not confirmed"
+          exit 1
