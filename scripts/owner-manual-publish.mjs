@@ -68,7 +68,7 @@ if (fs.existsSync(p("owner-records/"+id+"/index.html"))) throw new Error("duplic
 const dollars=n=>(n/100).toFixed(2);
 const escapeHtml=v=>String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
 const dateLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",month:"long",day:"numeric",year:"numeric"}).format(candidates[0]);
-const timeLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",dateStyle:"long",timeStyle:"short",timeZoneName:"short"}).format(candidates[0]);
+const timeLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",year:"numeric",month:"long",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(candidates[0]);
 const url="/owner-records/"+id+"/";
 const record={
   ...prev,
