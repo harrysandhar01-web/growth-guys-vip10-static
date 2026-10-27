@@ -43,3 +43,25 @@ jobs:
           node "$GITHUB_WORKSPACE/scripts/validate-canonical-snapshot.mjs" public
           test -s public/owner-publication-state.json
           echo 'Owner publication dry-run passed. No production site changed.'
+      - name: Test new observation publishing in a separate isolated copy
+        env:
+          GITHUB_ACTOR: harrysandhar01-web
+          OWNER_CONFIRMED: 'true'
+          SITE_PROFILE: vip10
+          PUBLICATION_MODE: new
+          OBSERVED_EASTERN: '2026-10-27 09:45'
+          PRODUCT_NAME: 'BPC-157 5mg - Single vial'
+          CART_SUBTOTAL: '40.00'
+          DISCOUNT_AMOUNT: '4.00'
+          DISPLAYED_TOTAL: '36.00'
+          EVIDENCE_URL: '/verification-archive/vip10-observed-20261025-134530/'
+          OWNER_REASON: 'Regression fixture for new observation branch; no production changes'
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/owner-new-test"
+          cp -a public "$RUNNER_TEMP/owner-new-test/public"
+          cd "$RUNNER_TEMP/owner-new-test"
+          node "$GITHUB_WORKSPACE/scripts/owner-manual-publish.mjs"
+          node "$GITHUB_WORKSPACE/scripts/validate-current-record-projection.mjs" public
+          node "$GITHUB_WORKSPACE/scripts/validate-canonical-snapshot.mjs" public
+          echo 'New observation dry-run passed; production is unchanged.'
