@@ -129,7 +129,13 @@ for(const file of ["index.html",cfg.route+"/index.html","verification-archive/in
 const sitemap=read("sitemap.xml");
 if(!sitemap.includes("</urlset>")) throw Error("sitemap_missing_urlset");
 put("sitemap.xml",sitemap.replace("</urlset>","<url><loc>https://"+cfg.domain+url+"</loc><lastmod>"+now.slice(0,10)+"</lastmod></url></urlset>"));
+const routeMap=readJson("static-route-map.json");
+routeMap[url]=" /owner-records/"+id+"/index.html";
+routeMap[url]=routeMap[url].trim();
+put("static-route-map.json",routeMap);
 const manifest=readJson("deployment-manifest.json");
+if (!Number.isInteger(manifest.canonicalSnapshot?.publicRouteCount)) throw Error("unexpected_route_count_metadata");
+manifest.canonicalSnapshot.publicRouteCount += 1;
 manifest.eventKey=id;
 manifest.recordPublishedAt=now;
 manifest.generatedAt=now;
