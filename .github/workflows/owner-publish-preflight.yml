@@ -1,0 +1,45 @@
+name: Test owner manual publishing without touching production
+on:
+  push:
+    paths:
+      - 'scripts/owner-manual-publish.mjs'
+      - 'scripts/validate-current-record-projection.mjs'
+      - '.github/workflows/owner-manual-publish.yml'
+      - '.github/workflows/owner-publish-preflight.yml'
+  pull_request:
+    paths:
+      - 'scripts/owner-manual-publish.mjs'
+      - 'scripts/validate-current-record-projection.mjs'
+      - '.github/workflows/owner-manual-publish.yml'
+      - '.github/workflows/owner-publish-preflight.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check manual publisher
+        run: node --check scripts/owner-manual-publish.mjs
+      - name: Test evidence-backed owner correction in isolated copy
+        env:
+          GITHUB_ACTOR: harrysandhar01-web
+          OWNER_CONFIRMED: 'true'
+          SITE_PROFILE: vip10
+          PUBLICATION_MODE: correction
+          OBSERVED_EASTERN: '2026-10-25 09:45'
+          OWNER_REASON: 'Preflight test; preserve original evidence and original verified time'
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/owner-test"
+          cp -a public "$RUNNER_TEMP/owner-test/public"
+          cd "$RUNNER_TEMP/owner-test"
+          node "$GITHUB_WORKSPACE/scripts/owner-manual-publish.mjs"
+          node "$GITHUB_WORKSPACE/scripts/validate-current-record-projection.mjs" public
+          node "$GITHUB_WORKSPACE/scripts/validate-canonical-snapshot.mjs" public
+          test -s public/owner-publication-state.json
+          echo 'Owner publication dry-run passed. No production site changed.'
