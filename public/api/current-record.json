@@ -1,10 +1,10 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-observed-20261025-134530",
-  "record_url": "/verification-archive/vip10-observed-20261025-134530/",
+  "record_reference": "vip10-owner-20261027134500-40619725371",
+  "record_url": "/owner-records/vip10-owner-20261027134500-40619725371/",
   "status": "Verified at checkout",
-  "observed_at": "2026-10-25T13:45:30Z",
-  "method": "Browser cart-only verification",
+  "observed_at": "2026-10-27T13:45:00.000Z",
+  "method": "Owner-attested cart-only evidence",
   "product_name": "BPC-157 5mg - Single vial",
   "product_url": "https://growthguys.com/shop/bpc-157-5mg/",
   "currency": "CAD",
@@ -12,6 +12,12 @@
   "discount_amount": "4.00",
   "observed_total": "36.00",
   "payment_method_selected": false,
-  "evidence_url": "/verification-archive/vip10-observed-20261025-134530/",
-  "scope": "Documented pre-payment cart observation; no identity, address, payment, or purchase was submitted."
+  "evidence_url": "/observations/2026-10-27/",
+  "scope": "Documented pre-payment cart observation; no order was made.",
+  "observed_timezone": "America/Toronto",
+  "product": "BPC-157 5mg - Single vial",
+  "subtotal_cad": "40.00",
+  "discount_cad": "4.00",
+  "total_cad": "36.00",
+  "source_record_reference": "vip10-observed-20261025-134530"
 }

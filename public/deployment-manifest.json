@@ -3,10 +3,10 @@
   "profileId": "vip10",
   "code": "VIP10",
   "canonicalOrigin": "https://growthguysvip10.ca",
-  "generatedAt": "2026-10-25T18:25:00Z",
+  "generatedAt": "2026-10-28T02:14:22.022Z",
   "source": "canonical_public_html_snapshot",
-  "eventKey": "vip10-observed-20261025-134530",
-  "recordPublishedAt": "2026-10-25T18:25:00Z",
+  "eventKey": "vip10-owner-20261027134500-40619725371",
+  "recordPublishedAt": "2026-10-28T02:14:22.022Z",
   "staticRoutes": {
     "/": "/index.html",
     "/about-the-desk/": "/about-the-desk/index.html",
@@ -216,7 +216,7 @@
   "deploymentState": "built_not_deployed",
   "canonicalSnapshot": {
     "generatedAt": "2026-10-19T16:29:50.000Z",
-    "publicRouteCount": 203,
+    "publicRouteCount": 204,
     "nextAssetCount": 125,
     "publicHostedAssetCount": 0,
     "currentRecordEventKey": "vip10-observed-20261019-161519",
@@ -231,5 +231,6 @@
     "verification publication",
     "scheduled verification",
     "database-backed current record"
-  ]
+  ],
+  "ownerControlled": true
 }
