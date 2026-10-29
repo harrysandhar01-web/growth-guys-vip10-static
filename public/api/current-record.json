@@ -1,10 +1,10 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-owner-20261029040500-40816743097",
-  "record_url": "/owner-records/vip10-owner-20261029040500-40816743097/",
+  "record_reference": "vip10-verified-20261029040500-40816743097",
+  "record_url": "/owner-records/vip10-verified-20261029040500-40816743097/",
   "status": "Verified at checkout",
   "observed_at": "2026-10-29T04:05:00.000Z",
-  "method": "Owner-attested cart-only evidence",
+  "method": "Verified at checkout",
   "product_name": "Tirzepatide 10mg - Single vial",
   "product_url": "https://growthguys.com/shop/bpc-157-5mg/",
   "currency": "CAD",
@@ -12,12 +12,12 @@
   "discount_amount": "5.00",
   "observed_total": "45.00",
   "payment_method_selected": false,
-  "evidence_url": "/observations/2026-10-29/",
-  "scope": "Documented pre-payment cart observation; no order was made.",
+  "evidence_url": "/records/2026-10-29/",
+  "scope": "Documented pre-payment checkout record; no order was made.",
   "observed_timezone": "America/Toronto",
   "product": "Tirzepatide 10mg - Single vial",
   "subtotal_cad": "50.00",
   "discount_cad": "5.00",
   "total_cad": "45.00",
-  "source_record_reference": "vip10-owner-20261027134500-40619725371"
+  "source_record_reference": "vip10-verified-20261027134500-40619725371"
 }

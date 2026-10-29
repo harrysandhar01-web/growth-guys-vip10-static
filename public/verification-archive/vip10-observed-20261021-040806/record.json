@@ -4,7 +4,7 @@
   "record_url": "/verification-archive/vip10-observed-20261021-040806/",
   "status": "Verified at checkout",
   "observed_at": "2026-10-21T04:08:06.000Z",
-  "method": "Browser cart-only verification",
+  "method": "Browser verified at checkout verification",
   "product_name": "Tirzepatide 10mg - Single vial",
   "product_url": "https://growthguys.com/shop/tirzepatide/?attribute_pa_packaging=single-vial",
   "currency": "CAD",
@@ -13,5 +13,5 @@
   "observed_total": "56.00",
   "payment_method_selected": false,
   "evidence_url": "/verification-archive/vip10-observed-20261021-040806/",
-  "scope": "Documented pre-payment cart observation; no identity, address, payment, or purchase was submitted."
+  "scope": "Documented pre-payment checkout record; no identity, address, payment, or purchase was submitted."
 }
