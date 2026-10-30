@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261030040600-41001336998",
+  "sourceRecordReference": "vip10-verified-20261029040500-40816743097",
+  "previousObservedAt": "2026-10-29T04:05:00.000Z",
+  "observedAt": "2026-10-30T04:06:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the new October 30 VIP10 cart result from retained browser evidence.",
+  "originalEvidence": "/observations/2026-10-30/",
+  "publishedByRun": "41001336998",
+  "submittedAt": "2026-10-30T04:10:01.174Z"
+}
