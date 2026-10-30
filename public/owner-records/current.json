@@ -1,7 +1,7 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-verified-20261030040600-41001336998",
-  "record_url": "/owner-records/vip10-verified-20261030040600-41001336998/",
+  "record_reference": "vip10-owner-20261030040600-41001336998",
+  "record_url": "/owner-records/vip10-owner-20261030040600-41001336998/",
   "status": "Verified at checkout",
   "observed_at": "2026-10-30T04:06:00.000Z",
   "method": "Verified at checkout",
@@ -19,5 +19,5 @@
   "subtotal_cad": "50.00",
   "discount_cad": "5.00",
   "total_cad": "45.00",
-  "source_record_reference": "vip10-verified-20261029040500-40816743097"
+  "source_record_reference": "vip10-owner-20261029040500-40816743097"
 }
