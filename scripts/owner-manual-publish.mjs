@@ -84,6 +84,15 @@ const record={
   payment_method_selected:false,
   scope:"Documented pre-payment cart observation; no order was made."
 };
+// Never inherit product metadata from the previous record. These fields are
+// published only when explicitly supplied for this exact cart event.
+const explicitProductUrl=(process.env.PRODUCT_URL || "").trim();
+if (explicitProductUrl) record.product_url=explicitProductUrl; else delete record.product_url;
+const explicitLineItems=(process.env.LINE_ITEMS_JSON || "").trim();
+if (explicitLineItems) {
+  try { record.line_items=JSON.parse(explicitLineItems); }
+  catch { throw new Error("line_items_json_must_be_valid_json"); }
+} else delete record.line_items;
 const now=new Date().toISOString();
 const audit={schemaVersion:1,profile,code:cfg.code,mode,recordReference:id,sourceRecordReference:oldRef,previousObservedAt:prev.observed_at,observedAt,owner:"harrysandhar01-web",reason,originalEvidence:evidence,publishedByRun:process.env.GITHUB_RUN_ID||null,submittedAt:now};
 const badge = "<!-- OWNER_RECORD_START --><section aria-label=\"Current owner-approved verification record\" data-owner-current-record=\""+id+"\" style=\"margin:12px auto;padding:16px;max-width:1200px;background:#f0f8ed;color:#16391c;border:3px solid #248044;font:16px/1.5 Arial,sans-serif;position:relative;z-index:10\"><strong>Latest owner-approved "+escapeHtml(cfg.code)+" record — "+escapeHtml(dateLabel)+"</strong><p style=\"margin:5px 0\">Cart observed "+escapeHtml(timeLabel)+" · "+escapeHtml(product)+" · CAD "+dollars(subtotal)+" subtotal · CAD "+dollars(discount)+" discount · CAD "+dollars(total)+" displayed total.</p><p style=\"margin:5px 0\">"+(mode==="correction"?"Correction to a previously documented cart event.":"Documented new cart event.")+" No purchase was made. <a href=\""+url+"\">View record and evidence</a>.</p></section><!-- OWNER_RECORD_END -->";

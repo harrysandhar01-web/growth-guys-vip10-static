@@ -27,6 +27,12 @@ on:
       displayed_total:
         type: string
         description: "CAD total; optional for correction"
+      product_url:
+        type: string
+        description: "Verified product URL for this exact record; omit if unverified"
+      line_items_json:
+        type: string
+        description: "Verified line items JSON for this exact record; omit if unverified"
       owner_reason:
         type: string
         required: true
@@ -69,6 +75,8 @@ jobs:
           CART_SUBTOTAL: ${{ inputs.cart_subtotal }}
           DISCOUNT_AMOUNT: ${{ inputs.discount_amount }}
           DISPLAYED_TOTAL: ${{ inputs.displayed_total }}
+          PRODUCT_URL: ${{ inputs.product_url }}
+          LINE_ITEMS_JSON: ${{ inputs.line_items_json }}
           OWNER_REASON: ${{ inputs.owner_reason }}
           OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
         run: |
