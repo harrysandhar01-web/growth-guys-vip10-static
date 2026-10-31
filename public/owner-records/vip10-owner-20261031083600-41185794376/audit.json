@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261031083600-41185794376",
+  "sourceRecordReference": "vip10-owner-20261030040600-41001336998",
+  "previousObservedAt": "2026-10-30T04:06:00.000Z",
+  "observedAt": "2026-10-31T08:36:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "October 31 screenshot-backed VIP10 cart verification: TB-500 5mg single vial, VIP10 CAD 4.00 discount, CAD 36.00 displayed product total before shipping and taxes; no payment details entered and no order submitted.",
+  "originalEvidence": "/observations/2026-10-31/",
+  "publishedByRun": "41185794376",
+  "submittedAt": "2026-10-31T08:44:12.463Z"
+}
