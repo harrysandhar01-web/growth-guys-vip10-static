@@ -1,7 +1,9 @@
 import { access, readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const publicDir = resolve(process.argv[2] ?? "public");
+const repoRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const publicDir = resolve(repoRoot, process.argv[2] ?? "public");
 const routeMap = JSON.parse(await readFile(join(publicDir, "static-route-map.json"), "utf8"));
 const manifest = JSON.parse(await readFile(join(publicDir, "deployment-manifest.json"), "utf8"));
 const sitemap = await readFile(join(publicDir, "sitemap.xml"), "utf8");
