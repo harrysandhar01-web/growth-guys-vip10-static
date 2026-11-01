@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261101040500-41271917129",
+  "sourceRecordReference": "vip10-owner-20261031083600-41185794376",
+  "previousObservedAt": "2026-10-31T08:36:00.000Z",
+  "observedAt": "2026-11-01T04:05:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the exact November 1 cart check retained from the internal browser, with no payment or order submission.",
+  "originalEvidence": "/observations/2026-11-01/",
+  "publishedByRun": "41271917129",
+  "submittedAt": "2026-11-01T04:08:51.200Z"
+}

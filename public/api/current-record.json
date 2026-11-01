@@ -1,22 +1,30 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-owner-20261031083600-41185794376",
-  "record_url": "/owner-records/vip10-owner-20261031083600-41185794376/",
+  "record_reference": "vip10-owner-20261101040500-41271917129",
+  "record_url": "/owner-records/vip10-owner-20261101040500-41271917129/",
   "status": "Verified at checkout",
-  "observed_at": "2026-10-31T08:36:00.000Z",
-  "method": "Verified at checkout",
-  "product_name": "TB-500 5mg single vial",
+  "observed_at": "2026-11-01T04:05:00.000Z",
+  "method": "Owner-attested cart-only evidence",
+  "product_name": "BPC-157 10mg single vial",
   "currency": "CAD",
-  "cart_subtotal": "40.00",
-  "discount_amount": "4.00",
-  "observed_total": "36.00",
+  "cart_subtotal": "60.00",
+  "discount_amount": "6.00",
+  "observed_total": "54.00",
   "payment_method_selected": false,
-  "evidence_url": "/observations/2026-10-31/",
-  "scope": "Documented pre-payment checkout record; no purchase was made.",
+  "evidence_url": "/observations/2026-11-01/",
+  "scope": "Documented pre-payment cart observation; no order was made.",
   "observed_timezone": "America/Toronto",
-  "product": "TB-500 5mg single vial",
-  "subtotal_cad": "40.00",
-  "discount_cad": "4.00",
-  "total_cad": "36.00",
-  "source_record_reference": "vip10-owner-20261030040600-41001336998"
+  "product": "BPC-157 10mg single vial",
+  "subtotal_cad": "60.00",
+  "discount_cad": "6.00",
+  "total_cad": "54.00",
+  "source_record_reference": "vip10-owner-20261031083600-41185794376",
+  "product_url": "https://growthguys.com/shop/bpc-157-10mg/?attribute_pa_packaging=single-vial",
+  "line_items": [
+    {
+      "name": "BPC-157 10mg - Single vial",
+      "quantity": 1,
+      "unit_price_cad": "60.00"
+    }
+  ]
 }

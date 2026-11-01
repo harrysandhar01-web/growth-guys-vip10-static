@@ -597,6 +597,19 @@
       "discountAmount": "4.00",
       "cartSubtotal": "40.00",
       "evidenceUrl": "/observations/2026-10-31/"
+    },
+    {
+      "recordReference": "vip10-owner-20261101040500-41271917129",
+      "recordUrl": "/owner-records/vip10-owner-20261101040500-41271917129/",
+      "checkedAt": "2026-11-01T04:05:00.000Z",
+      "status": "accepted",
+      "recordType": "Documented cart result",
+      "productName": "BPC-157 10mg single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "6.00",
+      "cartSubtotal": "60.00",
+      "evidenceUrl": "/observations/2026-11-01/"
     }
   ],
   "health": {
