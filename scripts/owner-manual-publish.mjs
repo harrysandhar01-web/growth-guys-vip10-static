@@ -80,9 +80,9 @@ const record={
   observed_total:dollars(total),total_cad:dollars(total),
   evidence_url:evidence,
   source_record_reference:oldRef,
-  method:"Owner-attested cart-only evidence",
+  method:"Verified at checkout evidence",
   payment_method_selected:false,
-  scope:"Documented pre-payment cart observation; no order was made."
+  scope:"Documented pre-payment checkout record; no order was made."
 };
 // Never inherit product metadata from the previous record. These fields are
 // published only when explicitly supplied for this exact cart event.
@@ -95,8 +95,8 @@ if (explicitLineItems) {
 } else delete record.line_items;
 const now=new Date().toISOString();
 const audit={schemaVersion:1,profile,code:cfg.code,mode,recordReference:id,sourceRecordReference:oldRef,previousObservedAt:prev.observed_at,observedAt,owner:"harrysandhar01-web",reason,originalEvidence:evidence,publishedByRun:process.env.GITHUB_RUN_ID||null,submittedAt:now};
-const badge = "<!-- OWNER_RECORD_START --><section aria-label=\"Current owner-approved verification record\" data-owner-current-record=\""+id+"\" style=\"margin:12px auto;padding:16px;max-width:1200px;background:#f0f8ed;color:#16391c;border:3px solid #248044;font:16px/1.5 Arial,sans-serif;position:relative;z-index:10\"><strong>Latest owner-approved "+escapeHtml(cfg.code)+" record — "+escapeHtml(dateLabel)+"</strong><p style=\"margin:5px 0\">Cart observed "+escapeHtml(timeLabel)+" · "+escapeHtml(product)+" · CAD "+dollars(subtotal)+" subtotal · CAD "+dollars(discount)+" discount · CAD "+dollars(total)+" displayed total.</p><p style=\"margin:5px 0\">"+(mode==="correction"?"Correction to a previously documented cart event.":"Documented new cart event.")+" No purchase was made. <a href=\""+url+"\">View record and evidence</a>.</p></section><!-- OWNER_RECORD_END -->";
-const summary = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+cfg.code+" verified cart observation — "+dateLabel+"</title><link rel=\"canonical\" href=\"https://"+cfg.domain+url+"\"></head><body style=\"font:18px/1.6 Arial,sans-serif;max-width:820px;margin:auto;padding:20px\"><p><a href=\"/\">Home</a></p><h1>"+cfg.code+" documented cart observation</h1><p><strong>Observed:</strong> "+escapeHtml(timeLabel)+"</p><p><strong>Product:</strong> "+escapeHtml(product)+"</p><p><strong>Subtotal:</strong> CAD "+dollars(subtotal)+"</p><p><strong>Code discount:</strong> CAD "+dollars(discount)+"</p><p><strong>Displayed total:</strong> CAD "+dollars(total)+"</p><p><strong>Source evidence:</strong> <a href=\""+escapeHtml(evidence)+"\">View evidence</a></p><p><strong>Record type:</strong> "+(mode==="correction"?"Owner-approved correction of documented observation":"Owner-approved documented observation")+"</p><p>This reports a cart-only observation, not a completed purchase or a guarantee of future checkout conditions.</p></body></html>";
+const badge = "<!-- OWNER_RECORD_START --><section aria-label=\"Current verified checkout record\" data-owner-current-record=\""+id+"\" style=\"margin:12px auto;padding:16px;max-width:1200px;background:#f0f8ed;color:#16391c;border:3px solid #248044;font:16px/1.5 Arial,sans-serif;position:relative;z-index:10\"><strong>Latest verified "+escapeHtml(cfg.code)+" record — "+escapeHtml(dateLabel)+"</strong><p style=\"margin:5px 0\">Cart observed "+escapeHtml(timeLabel)+" · "+escapeHtml(product)+" · CAD "+dollars(subtotal)+" subtotal · CAD "+dollars(discount)+" discount · CAD "+dollars(total)+" displayed total.</p><p style=\"margin:5px 0\">"+(mode==="correction"?"Correction to a previously documented cart event.":"Documented new cart event.")+" No purchase was made. <a href=\""+url+"\">View record and evidence</a>.</p></section><!-- OWNER_RECORD_END -->";
+const summary = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+cfg.code+" verified checkout record — "+dateLabel+"</title><link rel=\"canonical\" href=\"https://"+cfg.domain+url+"\"></head><body style=\"font:18px/1.6 Arial,sans-serif;max-width:820px;margin:auto;padding:20px\"><p><a href=\"/\">Home</a></p><h1>"+cfg.code+" documented checkout record</h1><p><strong>Observed:</strong> "+escapeHtml(timeLabel)+"</p><p><strong>Product:</strong> "+escapeHtml(product)+"</p><p><strong>Subtotal:</strong> CAD "+dollars(subtotal)+"</p><p><strong>Code discount:</strong> CAD "+dollars(discount)+"</p><p><strong>Displayed total:</strong> CAD "+dollars(total)+"</p><p><strong>Source evidence:</strong> <a href=\""+escapeHtml(evidence)+"\">View evidence</a></p><p><strong>Record type:</strong> "+(mode==="correction"?"Verified at checkout correction of documented observation":"Verified at checkout dated record")+"</p><p>This reports a pre-payment cart check, not a completed purchase or a guarantee of future checkout conditions.</p></body></html>";
 // Stage every file in memory first; invalid input must cause no partial writes.
 const out=new Map();
 const put=(f,v)=>out.set(f,typeof v==="string"?v:JSON.stringify(v,null,2)+"\n");
@@ -109,17 +109,17 @@ put("owner-records/current.json",record);
 const feed=readJson("verification-feed.json");
 if (profile==="vip10"){
   if(!Array.isArray(feed.records)) throw Error("vip10_feed_schema_changed");
-  feed.records.push({recordReference:id,recordUrl:url,checkedAt:observedAt,status:"accepted",recordType:mode==="correction"?"Owner-approved correction":"Documented cart result",productName:product,currency:"CAD",code:cfg.code,discountAmount:dollars(discount),cartSubtotal:dollars(subtotal),evidenceUrl:evidence});
+  feed.records.push({recordReference:id,recordUrl:url,checkedAt:observedAt,status:"accepted",recordType:mode==="correction"?"Verified at checkout correction":"Documented cart result",productName:product,currency:"CAD",code:cfg.code,discountAmount:dollars(discount),cartSubtotal:dollars(subtotal),evidenceUrl:evidence});
 }else{
   if(!Array.isArray(feed.items)) throw Error("growth10_feed_schema_changed");
-  feed.items.unshift({id,url:"https://"+cfg.domain+url,title:cfg.code+" owner-approved cart observation",date_published:observedAt,date_modified:now,content_text:product+": "+cfg.code+" reduced a CAD "+dollars(subtotal)+" cart by CAD "+dollars(discount)+" to CAD "+dollars(total)+". No purchase was made.",attachments:[{url:evidence.startsWith("/")?"https://"+cfg.domain+evidence:evidence,title:"Documented original evidence"}]});
+  feed.items.unshift({id,url:"https://"+cfg.domain+url,title:cfg.code+" verified checkout record",date_published:observedAt,date_modified:now,content_text:product+": "+cfg.code+" reduced a CAD "+dollars(subtotal)+" cart by CAD "+dollars(discount)+" to CAD "+dollars(total)+". No purchase was made.",attachments:[{url:evidence.startsWith("/")?"https://"+cfg.domain+evidence:evidence,title:"Documented original evidence"}]});
 }
 put("verification-feed.json",feed);
 put("api/verification-feed.json",feed);
 const xml=read("feed.xml");
 if(!xml.includes("<channel>")) throw Error("unsupported_rss_format");
 const description=escapeHtml(cfg.code+" "+product+" observed "+timeLabel+"; subtotal CAD "+dollars(subtotal)+", discount CAD "+dollars(discount)+", total CAD "+dollars(total)+".");
-const item="<item><guid>https://"+cfg.domain+url+"</guid><title>"+escapeHtml(cfg.code+" owner-approved cart observation")+"</title><link>https://"+cfg.domain+url+"</link><pubDate>"+candidates[0].toUTCString()+"</pubDate><description>"+description+"</description></item>";
+const item="<item><guid>https://"+cfg.domain+url+"</guid><title>"+escapeHtml(cfg.code+" verified checkout record")+"</title><link>https://"+cfg.domain+url+"</link><pubDate>"+candidates[0].toUTCString()+"</pubDate><description>"+description+"</description></item>";
 put("feed.xml",xml.replace("<channel>","<channel>"+item).replace(/<lastBuildDate>[^<]*<\/lastBuildDate>/,"<lastBuildDate>"+new Date().toUTCString()+"</lastBuildDate>"));
 for(const file of ["index.html",cfg.route+"/index.html","verification-archive/index.html","verification-history/index.html","how-we-verify/index.html"]){
   if(!fs.existsSync(p(file))) continue;
