@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261103173300-41692539499",
+  "sourceRecordReference": "vip10-owner-20261101040500-41271917129",
+  "previousObservedAt": "2026-11-01T04:05:00.000Z",
+  "observedAt": "2026-11-03T17:33:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the validated November 3 laptop cart record with original site-owned evidence and no purchase.",
+  "originalEvidence": "/evidence/2026-11-03/vip10-original-cart.webp",
+  "publishedByRun": "41692539499",
+  "submittedAt": "2026-11-03T18:18:53.639Z"
+}

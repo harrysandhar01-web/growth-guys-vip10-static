@@ -1,30 +1,30 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-owner-20261101040500-41271917129",
-  "record_url": "/owner-records/vip10-owner-20261101040500-41271917129/",
+  "record_reference": "vip10-owner-20261103173300-41692539499",
+  "record_url": "/owner-records/vip10-owner-20261103173300-41692539499/",
   "status": "Verified at checkout",
-  "observed_at": "2026-11-01T04:05:00.000Z",
+  "observed_at": "2026-11-03T17:33:00.000Z",
   "method": "Verified at checkout evidence",
-  "product_name": "BPC-157 10mg single vial",
+  "product_name": "TB-500 5mg — single vial",
   "currency": "CAD",
-  "cart_subtotal": "60.00",
-  "discount_amount": "6.00",
-  "observed_total": "54.00",
+  "cart_subtotal": "40.00",
+  "discount_amount": "4.00",
+  "observed_total": "36.00",
   "payment_method_selected": false,
-  "evidence_url": "/observations/2026-11-01/",
+  "evidence_url": "/evidence/2026-11-03/vip10-original-cart.webp",
   "scope": "Documented pre-payment checkout record; no order was made.",
   "observed_timezone": "America/Toronto",
-  "product": "BPC-157 10mg single vial",
-  "subtotal_cad": "60.00",
-  "discount_cad": "6.00",
-  "total_cad": "54.00",
-  "source_record_reference": "vip10-owner-20261031083600-41185794376",
-  "product_url": "https://growthguys.com/shop/bpc-157-10mg/?attribute_pa_packaging=single-vial",
+  "product": "TB-500 5mg — single vial",
+  "subtotal_cad": "40.00",
+  "discount_cad": "4.00",
+  "total_cad": "36.00",
+  "source_record_reference": "vip10-owner-20261101040500-41271917129",
+  "product_url": "https://growthguys.com/shop/tb-500/",
   "line_items": [
     {
-      "name": "BPC-157 10mg - Single vial",
+      "name": "TB-500 5mg — single vial",
       "quantity": 1,
-      "unit_price_cad": "60.00"
+      "unit_price_cad": "40.00"
     }
   ]
 }
