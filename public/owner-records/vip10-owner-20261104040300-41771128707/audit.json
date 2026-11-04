@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261104040300-41771128707",
+  "sourceRecordReference": "vip10-owner-20261103173300-41692539499",
+  "previousObservedAt": "2026-11-03T17:33:00.000Z",
+  "observedAt": "2026-11-04T04:03:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the independently retained November 4 laptop cart observation after exact-code application and visible final-total confirmation.",
+  "originalEvidence": "https://growthguysvip10.ca/evidence/2026-11-04/vip10-original-cart.png",
+  "publishedByRun": "41771128707",
+  "submittedAt": "2026-11-04T04:06:27.105Z"
+}

@@ -623,6 +623,19 @@
       "discountAmount": "4.00",
       "cartSubtotal": "40.00",
       "evidenceUrl": "/evidence/2026-11-03/vip10-original-cart.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261104040300-41771128707",
+      "recordUrl": "/owner-records/vip10-owner-20261104040300-41771128707/",
+      "checkedAt": "2026-11-04T04:03:00.000Z",
+      "status": "accepted",
+      "recordType": "Documented cart result",
+      "productName": "Tirzepatide 10mg — single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "5.00",
+      "cartSubtotal": "50.00",
+      "evidenceUrl": "https://growthguysvip10.ca/evidence/2026-11-04/vip10-original-cart.png"
     }
   ],
   "health": {

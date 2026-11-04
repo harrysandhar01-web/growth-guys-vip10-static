@@ -1,0 +1,30 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-owner-20261104040300-41771128707",
+  "record_url": "/owner-records/vip10-owner-20261104040300-41771128707/",
+  "status": "Verified at checkout",
+  "observed_at": "2026-11-04T04:03:00.000Z",
+  "method": "Verified at checkout evidence",
+  "product_name": "Tirzepatide 10mg — single vial",
+  "currency": "CAD",
+  "cart_subtotal": "50.00",
+  "discount_amount": "5.00",
+  "observed_total": "45.00",
+  "payment_method_selected": false,
+  "evidence_url": "https://growthguysvip10.ca/evidence/2026-11-04/vip10-original-cart.png",
+  "scope": "Documented pre-payment checkout record; no order was made.",
+  "observed_timezone": "America/Toronto",
+  "product": "Tirzepatide 10mg — single vial",
+  "subtotal_cad": "50.00",
+  "discount_cad": "5.00",
+  "total_cad": "45.00",
+  "source_record_reference": "vip10-owner-20261103173300-41692539499",
+  "product_url": "https://growthguys.com/shop/tirzepatide-10mg/",
+  "line_items": [
+    {
+      "name": "Tirzepatide 10mg — single vial",
+      "quantity": 1,
+      "unit_price_cad": "50.00"
+    }
+  ]
+}
