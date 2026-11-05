@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261105041400-41967235836",
+  "sourceRecordReference": "vip10-owner-20261104040300-41771128707",
+  "previousObservedAt": "2026-11-04T04:03:00.000Z",
+  "observedAt": "2026-11-05T04:14:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the November 4 cart observation captured in the approved fallback after the laptop promo control timed out; exact VIP10 cart result was preserved and checked.",
+  "originalEvidence": "https://growthguysvip10.ca/evidence/2026-11-05/vip10-original-cart.webp",
+  "publishedByRun": "41967235836",
+  "submittedAt": "2026-11-05T04:21:05.566Z"
+}
