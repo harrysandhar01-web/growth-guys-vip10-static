@@ -12,11 +12,14 @@ if (existsSync(joinFile(ownerDir,"owner-publication-state.json"))) {
   const has=state.profile==="vip10" ? feed.records.some(x=>x.recordReference===state.latest) : feed.items.some(x=>x.id===state.latest);
   if (!has) throw Error("owner_record_absent_from_public_feed");
   const displayDate=new Intl.DateTimeFormat("en-US",{timeZone:"America/Toronto",month:"long",day:"numeric",year:"numeric"}).format(new Date(record.observed_at));
+  const publicationMatch=state.latest.match(/(?:vip10|growth10)-owner-(\d{4})(\d{2})(\d{2})/);
+  if (!publicationMatch) throw Error("owner_publication_date_missing");
+  const publicationDate=new Intl.DateTimeFormat("en-US",{timeZone:"UTC",month:"long",day:"numeric",year:"numeric"}).format(new Date(Date.UTC(Number(publicationMatch[1]),Number(publicationMatch[2])-1,Number(publicationMatch[3]))));
   for (const file of ["index.html",cfg.route+"/index.html","verification-archive/index.html"]) {
     const html=readFileSync(joinFile(ownerDir,file),"utf8");
     // Public pages use the customer-facing current-record block; an internal
     // owner banner is not required and must not be the publication contract.
-    if (!html.includes(record.product_name) || !html.includes(displayDate)) throw Error("current_public_projection_missing:"+file);
+    if (!html.includes(record.product_name) || !html.includes(displayDate) || ((file === "index.html" || file === cfg.route+"/index.html") && !html.includes(publicationDate))) throw Error("current_public_projection_missing:"+file);
   }
   if (!existsSync(joinFile(ownerDir,"owner-records",state.latest,"index.html"))) throw Error("owner_record_archive_missing");
   if (!readFileSync(joinFile(ownerDir,"sitemap.xml"),"utf8").includes("/owner-records/"+state.latest+"/")) throw Error("owner_record_sitemap_missing");
