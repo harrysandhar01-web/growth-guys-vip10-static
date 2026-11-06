@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261106040200-42160577141",
+  "sourceRecordReference": "vip10-owner-20261105041400-41967235836",
+  "previousObservedAt": "2026-11-05T04:14:00.000Z",
+  "observedAt": "2026-11-06T04:02:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the November 5 cart observation from the approved laptop-first run; VIP10 displayed a CAD 5.00 code discount on a CAD 50.00 cart and a CAD 45.00 total. No personal, payment, or order information was entered.",
+  "originalEvidence": "https://growthguysvip10.ca/evidence/2026-11-06/vip10-original-cart.webp",
+  "publishedByRun": "42160577141",
+  "submittedAt": "2026-11-06T04:07:27.553Z"
+}
