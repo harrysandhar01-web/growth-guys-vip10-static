@@ -662,6 +662,19 @@
       "discountAmount": "5.00",
       "cartSubtotal": "50.00",
       "evidenceUrl": "https://growthguysvip10.ca/evidence/2026-11-06/vip10-original-cart.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261106051000-42167230809",
+      "recordUrl": "/owner-records/vip10-owner-20261106051000-42167230809/",
+      "checkedAt": "2026-11-06T05:10:00.000Z",
+      "status": "accepted",
+      "recordType": "Documented cart result",
+      "productName": "Retatrutide 10mg — Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "9.00",
+      "cartSubtotal": "90.00",
+      "evidenceUrl": "https://growthguysvip10.ca/evidence/2026-11-06/vip10-cart-final.webp"
     }
   ],
   "health": {

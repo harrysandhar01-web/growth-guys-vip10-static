@@ -1,30 +1,30 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-owner-20261106040200-42160577141",
-  "record_url": "/owner-records/vip10-owner-20261106040200-42160577141/",
+  "record_reference": "vip10-owner-20261106051000-42167230809",
+  "record_url": "/owner-records/vip10-owner-20261106051000-42167230809/",
   "status": "Verified at checkout",
-  "observed_at": "2026-11-06T04:02:00.000Z",
+  "observed_at": "2026-11-06T05:10:00.000Z",
   "method": "Verified at checkout evidence",
-  "product_name": "Tirzepatide 10mg - Single vial",
+  "product_name": "Retatrutide 10mg — Single vial",
   "currency": "CAD",
-  "cart_subtotal": "50.00",
-  "discount_amount": "5.00",
-  "observed_total": "45.00",
+  "cart_subtotal": "90.00",
+  "discount_amount": "9.00",
+  "observed_total": "72.90",
   "payment_method_selected": false,
-  "evidence_url": "https://growthguysvip10.ca/evidence/2026-11-06/vip10-original-cart.webp",
+  "evidence_url": "https://growthguysvip10.ca/evidence/2026-11-06/vip10-cart-final.webp",
   "scope": "Documented pre-payment checkout record; no order was made.",
   "observed_timezone": "America/Toronto",
-  "product": "Tirzepatide 10mg - Single vial",
-  "subtotal_cad": "50.00",
-  "discount_cad": "5.00",
-  "total_cad": "45.00",
-  "source_record_reference": "vip10-owner-20261105041400-41967235836",
-  "product_url": "https://growthguys.com/shop/tirzepatide/?attribute_pa_packaging=single-vial",
+  "product": "Retatrutide 10mg — Single vial",
+  "subtotal_cad": "90.00",
+  "discount_cad": "9.00",
+  "total_cad": "72.90",
+  "source_record_reference": "vip10-owner-20261106040200-42160577141",
+  "product_url": "https://growthguys.com/shop/retatrutide/?attribute_pa_packaging=single-vial",
   "line_items": [
     {
-      "name": "Tirzepatide 10mg - Single vial",
+      "name": "Retatrutide 10mg — Single vial",
       "quantity": 1,
-      "unit_price_cad": "50.00"
+      "unit_price_cad": "90.00"
     }
   ]
 }
