@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261107040500-42337235898",
+  "sourceRecordReference": "vip10-owner-20261106051000-42167230809",
+  "previousObservedAt": "2026-11-06T05:10:00.000Z",
+  "observedAt": "2026-11-07T04:05:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the dated cart record from the original laptop capture. The cart visibly showed VIP10 CAD 5.00 plus the merchant auto-applied Interac e-Transfer CAD 4.50 discount, for CAD 9.50 total savings and CAD 40.50 displayed total. No payment method was selected and no purchase was made.",
+  "originalEvidence": "https://growthguysvip10.ca/evidence/2026-11-07/vip10-final-cart.webp",
+  "publishedByRun": "42337235898",
+  "submittedAt": "2026-11-07T04:10:22.010Z"
+}
