@@ -688,6 +688,19 @@
       "discountAmount": "9.50",
       "cartSubtotal": "50.00",
       "evidenceUrl": "https://growthguysvip10.ca/evidence/2026-11-07/vip10-final-cart.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261109040300-42587417616",
+      "recordUrl": "/owner-records/vip10-owner-20261109040300-42587417616/",
+      "checkedAt": "2026-11-09T04:03:00.000Z",
+      "status": "accepted",
+      "recordType": "Documented cart result",
+      "productName": "TB-500 5mg — Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "4.00",
+      "cartSubtotal": "40.00",
+      "evidenceUrl": "/evidence/2026-11-08/vip10-final-cart.webp"
     }
   ],
   "health": {

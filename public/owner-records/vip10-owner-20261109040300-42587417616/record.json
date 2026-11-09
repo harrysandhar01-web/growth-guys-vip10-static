@@ -1,0 +1,30 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-owner-20261109040300-42587417616",
+  "record_url": "/owner-records/vip10-owner-20261109040300-42587417616/",
+  "status": "Verified at checkout",
+  "observed_at": "2026-11-09T04:03:00.000Z",
+  "method": "Verified at checkout evidence",
+  "product_name": "TB-500 5mg — Single vial",
+  "currency": "CAD",
+  "cart_subtotal": "40.00",
+  "discount_amount": "4.00",
+  "observed_total": "32.40",
+  "payment_method_selected": false,
+  "evidence_url": "/evidence/2026-11-08/vip10-final-cart.webp",
+  "scope": "Documented pre-payment checkout record; no order was made.",
+  "observed_timezone": "America/Toronto",
+  "product": "TB-500 5mg — Single vial",
+  "subtotal_cad": "40.00",
+  "discount_cad": "4.00",
+  "total_cad": "32.40",
+  "source_record_reference": "vip10-owner-20261107040500-42337235898",
+  "product_url": "https://growthguys.com/shop/tb-500/?attribute_pa_packaging=single-vial",
+  "line_items": [
+    {
+      "name": "TB-500 5mg — Single vial",
+      "quantity": 1,
+      "unit_price_cad": "40.00"
+    }
+  ]
+}
