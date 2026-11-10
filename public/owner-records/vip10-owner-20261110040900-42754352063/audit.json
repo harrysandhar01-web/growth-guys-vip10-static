@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261110040900-42754352063",
+  "sourceRecordReference": "vip10-owner-20261109040300-42587417616",
+  "previousObservedAt": "2026-11-09T04:03:00.000Z",
+  "observedAt": "2026-11-10T04:09:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "New cart-only observation captured from original browser evidence; exact VIP10 code, product, subtotal, code discount, and displayed total were checked.",
+  "originalEvidence": "/evidence/2026-11-09/vip10-final-cart.webp",
+  "publishedByRun": "42754352063",
+  "submittedAt": "2026-11-10T04:12:33.440Z"
+}
