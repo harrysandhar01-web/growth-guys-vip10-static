@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261115060000-43684974330",
+  "sourceRecordReference": "vip10-owner-20261113052400-43372162727",
+  "previousObservedAt": "2026-11-13T05:24:00.000Z",
+  "observedAt": "2026-11-15T06:00:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the independently observed VIP10 checkout record after Interac selection and required code reapplication.",
+  "originalEvidence": "/evidence/2026-11-15-vip10-interac-checkout/final-interac-checkout.webp",
+  "publishedByRun": "43684974330",
+  "submittedAt": "2026-11-15T06:20:30.044Z"
+}

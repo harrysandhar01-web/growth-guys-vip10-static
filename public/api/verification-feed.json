@@ -740,6 +740,19 @@
       "discountAmount": "5.00",
       "cartSubtotal": "50.00",
       "evidenceUrl": "/evidence/2026-11-13/vip10-cart-final.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261115060000-43684974330",
+      "recordUrl": "/owner-records/vip10-owner-20261115060000-43684974330/",
+      "checkedAt": "2026-11-15T06:00:00.000Z",
+      "status": "accepted",
+      "recordType": "Documented cart result",
+      "productName": "TB-500 5mg — Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "4.00",
+      "cartSubtotal": "40.00",
+      "evidenceUrl": "/evidence/2026-11-15-vip10-interac-checkout/final-interac-checkout.webp"
     }
   ],
   "health": {
