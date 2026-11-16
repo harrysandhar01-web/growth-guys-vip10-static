@@ -1,0 +1,22 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-owner-20261116050600-43808382351",
+  "record_url": "/owner-records/vip10-owner-20261116050600-43808382351/",
+  "status": "Verified at checkout",
+  "observed_at": "2026-11-16T05:06:00.000Z",
+  "method": "Verified at checkout evidence",
+  "product_name": "Tirzepatide 10mg — Single vial",
+  "currency": "CAD",
+  "cart_subtotal": "50.00",
+  "discount_amount": "5.00",
+  "observed_total": "45.00",
+  "payment_method_selected": false,
+  "evidence_url": "/evidence/2026-11-16-vip10-cart-only/vip10-cart-code-applied.webp",
+  "scope": "Documented pre-payment checkout record; no order was made.",
+  "observed_timezone": "America/Toronto",
+  "product": "Tirzepatide 10mg — Single vial",
+  "subtotal_cad": "50.00",
+  "discount_cad": "5.00",
+  "total_cad": "45.00",
+  "source_record_reference": "vip10-owner-20261115060000-43684974330"
+}

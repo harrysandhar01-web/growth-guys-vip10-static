@@ -1,9 +1,9 @@
 {
-  "latest": "vip10-owner-20261115060000-43684974330",
+  "latest": "vip10-owner-20261116050600-43808382351",
   "profile": "vip10",
   "code": "VIP10",
-  "observedAt": "2026-11-15T06:00:00.000Z",
-  "submittedAt": "2026-11-15T06:20:30.044Z",
+  "observedAt": "2026-11-16T05:06:00.000Z",
+  "submittedAt": "2026-11-16T05:09:36.729Z",
   "mode": "new",
-  "previousReference": "vip10-owner-20261113052400-43372162727"
+  "previousReference": "vip10-owner-20261115060000-43684974330"
 }
