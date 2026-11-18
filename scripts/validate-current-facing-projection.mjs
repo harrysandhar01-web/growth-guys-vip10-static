@@ -9,11 +9,13 @@ const date = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', mon
 const pages = ['index.html', 'vip10/index.html', 'growth-guys-discount-code/index.html', 'does-vip10-work/index.html', 'how-we-verify/index.html', 'verification-archive/index.html'];
 const selectors = /current-record-refresh|verification-record-summary|current-verification-banner|search-evidence-module|verification-artifact|ledger-section/;
 function assert(ok, message) { if (!ok) throw new Error(message); }
+const hasStaleDatedCopy = text => [...text.matchAll(/(?:October|November) \d{1,2}, 2026/g)].some(match => match[0] !== date);
+const staleLegacyAmountPattern = new RegExp(['32.40', '36.00', '45.00', '52.40'].filter(value => ![record.subtotal_cad, record.discount_cad, record.total_cad].includes(value)).map(value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'));
 for (const file of pages) {
   const html = read(file);
   const head = html.split('</head>')[0];
   assert(head.includes(date) && head.includes(record.record_reference), file + ': current metadata missing');
-  assert(!/(?:October \d+|November (?!15\b)\d+), 2026/.test(head), file + ': stale current metadata');
+  assert(!hasStaleDatedCopy(head), file + ': stale current metadata');
   for (const tag of head.match(/<meta\b[^>]*>/g) || []) {
     if (/(?:name|property)="(?:description|og:description|twitter:description)"/.test(tag)) {
       for (const field of [record.product_name, record.total_cad, date]) assert(tag.includes(field), file + ': metadata field missing ' + field);
@@ -23,7 +25,7 @@ for (const file of pages) {
     if (!selectors.test(block.split('>')[0])) continue;
     assert(block.includes(date), file + ': stale current module date');
     assert(block.includes(record.record_url), file + ': stale current record link');
-    assert(!/October \d+, 2026|November (?!15\b)\d+, 2026|32\.40|36\.00|45\.00|BPC-157/.test(block), file + ': stale current module field');
+    assert(!hasStaleDatedCopy(block) && !staleLegacyAmountPattern.test(block) && !/BPC-157/.test(block), file + ': stale current module field');
     if (/current-record-refresh|verification-record-summary|search-evidence-module/.test(block.split('>')[0])) {
       assert(block.includes(record.total_cad), file + ': current total missing');
     }

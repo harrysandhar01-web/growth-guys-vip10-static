@@ -21,15 +21,17 @@ def current_text(text):
     # Only call on current modules, never a historical row or calendar entry.
     text = re.sub(r'(?:October|November|Oct|Nov) \d{1,2}, 2026(?:,? (?:at )?(?:approximately )?\d{1,2}:\d{2}(?::\d{2})? (?:a\.m\.|p\.m\.|AM|PM) (?:EDT|EST))?', lambda m: TIME if re.search(r'\d:\d', m[0]) else DATE, text)
     text = re.sub(r'2026-(?:10|11)-\d{2}T[0-9:.]+(?:Z|[+-]\d{2}:\d{2})', RECORD['observed_at'], text)
-    text = re.sub(r'(?:BPC-157 5mg - Single vial|TB-500 5mg — Single vial|Tirzepatide 10mg single vial)', RECORD['product_name'], text)
+    text = re.sub(r'(?:BPC-157 5mg - Single vial|TB-500 5mg — Single vial|Tirzepatide 10mg single vial|Semaglutide 5mg(?: —)? Single vial)', RECORD['product_name'], text)
     text = re.sub(r'/verification-archive(?:/vip10-observed-[^/"\s<]+/|#record-vip10-observed-[^"\s<]+)', RECORD['record_url'], text)
     text = re.sub(r'/owner-records/vip10-owner-[^/"\s<]+/', RECORD['record_url'], text)
     text = re.sub(r'/evidence/vip10-observed-[^/"\s<]+/', RECORD['evidence_url'], text)
     text = re.sub(r'/observations/2026-[^/"\s<]+/', RECORD['record_url'], text)
     text = text.replace('VIP10 was observed at the guest-cart stage. No identity, shipping address, payment information, checkout submission, or order was used. Payment-method-specific totals and location-specific taxes were not assessed.', RECORD['scope'])
-    for old in ['32.40', '36.00', '45.00']:
+    for old in ['32.40', '36.00', '45.00', '52.40']:
         text = text.replace(old, RECORD['total_cad'])
     text = text.replace('5.00 on a CAD 50.00', f"{RECORD['discount_cad']} on a CAD {RECORD['subtotal_cad']}")
+    text = text.replace('4.00 on a CAD 40.00', f"{RECORD['discount_cad']} on a CAD {RECORD['subtotal_cad']}")
+    text = text.replace('$40.00 CAD', '$' + RECORD['subtotal_cad'] + ' CAD').replace('$4.00 CAD', '$' + RECORD['discount_cad'] + ' CAD')
     return text
 
 def structured(data):
