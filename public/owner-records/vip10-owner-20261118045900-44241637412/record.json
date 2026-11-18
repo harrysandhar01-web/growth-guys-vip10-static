@@ -1,0 +1,22 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-owner-20261118045900-44241637412",
+  "record_url": "/owner-records/vip10-owner-20261118045900-44241637412/",
+  "status": "Verified at checkout",
+  "observed_at": "2026-11-18T04:59:00.000Z",
+  "method": "Verified at checkout evidence",
+  "product_name": "Semaglutide 5mg — Single vial",
+  "currency": "CAD",
+  "cart_subtotal": "50.00",
+  "discount_amount": "5.00",
+  "observed_total": "36.00",
+  "payment_method_selected": false,
+  "evidence_url": "/evidence/2026-11-17-vip10-cart-only/vip10-cart-code-applied.webp",
+  "scope": "Documented pre-payment checkout record; no order was made.",
+  "observed_timezone": "America/Toronto",
+  "product": "Semaglutide 5mg — Single vial",
+  "subtotal_cad": "50.00",
+  "discount_cad": "5.00",
+  "total_cad": "36.00",
+  "source_record_reference": "vip10-owner-20261117044500-44020202939"
+}
