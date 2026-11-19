@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "recordReference": "vip10-owner-20261119050500-44463348015",
+  "sourceRecordReference": "vip10-owner-20261118045900-44241637412",
+  "previousObservedAt": "2026-11-18T04:59:00.000Z",
+  "observedAt": "2026-11-19T05:05:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the new November 19 cart-only VIP10 observation with original evidence, after independent product-history and customer-facing checks.",
+  "originalEvidence": "/evidence/2026-11-19-vip10-cart-only/vip10-cart-code-applied.webp",
+  "publishedByRun": "44463348015",
+  "submittedAt": "2026-11-19T05:10:55.565Z"
+}
