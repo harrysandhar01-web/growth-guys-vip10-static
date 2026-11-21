@@ -1,22 +1,30 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-owner-20261120060700-44686313723",
-  "record_url": "/owner-records/vip10-owner-20261120060700-44686313723/",
+  "record_reference": "vip10-owner-20261121044300-44867928564",
+  "record_url": "/owner-records/vip10-owner-20261121044300-44867928564/",
   "status": "Verified at checkout",
-  "observed_at": "2026-11-20T06:07:00.000Z",
+  "observed_at": "2026-11-21T04:43:00.000Z",
   "method": "Verified at checkout evidence",
-  "product_name": "TB-500 5mg - Single vial",
+  "product_name": "Retatrutide 10mg - Single vial",
   "currency": "CAD",
-  "cart_subtotal": "40.00",
-  "discount_amount": "4.00",
-  "observed_total": "28.80",
+  "cart_subtotal": "80.00",
+  "discount_amount": "8.00",
+  "observed_total": "57.60",
   "payment_method_selected": false,
-  "evidence_url": "/evidence/2026-11-20-vip10-cart-only/vip10-cart-code-applied.webp",
+  "evidence_url": "/evidence/2026-11-20-vip10-cart-only-recovery/vip10-cart-code-applied.html",
   "scope": "Documented pre-payment checkout record; no order was made.",
   "observed_timezone": "America/Toronto",
-  "product": "TB-500 5mg - Single vial",
-  "subtotal_cad": "40.00",
-  "discount_cad": "4.00",
-  "total_cad": "28.80",
-  "source_record_reference": "vip10-owner-20261119050500-44463348015"
+  "product": "Retatrutide 10mg - Single vial",
+  "subtotal_cad": "80.00",
+  "discount_cad": "8.00",
+  "total_cad": "57.60",
+  "source_record_reference": "vip10-owner-20261120060700-44686313723",
+  "product_url": "https://growthguys.com/shop/retatrutide-10mg/",
+  "line_items": [
+    {
+      "name": "Retatrutide 10mg - Single vial",
+      "quantity": 1,
+      "price_cad": "80.00"
+    }
+  ]
 }

@@ -818,6 +818,19 @@
       "discountAmount": "4.00",
       "cartSubtotal": "40.00",
       "evidenceUrl": "/evidence/2026-11-20-vip10-cart-only/vip10-cart-code-applied.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261121044300-44867928564",
+      "recordUrl": "/owner-records/vip10-owner-20261121044300-44867928564/",
+      "checkedAt": "2026-11-21T04:43:00.000Z",
+      "status": "accepted",
+      "recordType": "Documented cart result",
+      "productName": "Retatrutide 10mg - Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "8.00",
+      "cartSubtotal": "80.00",
+      "evidenceUrl": "/evidence/2026-11-20-vip10-cart-only-recovery/vip10-cart-code-applied.html"
     }
   ],
   "health": {
