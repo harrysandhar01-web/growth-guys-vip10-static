@@ -33,6 +33,24 @@ on:
       line_items_json:
         type: string
         description: "Verified line items JSON for this exact record; omit if unverified"
+      observation_scope:
+        type: choice
+        required: true
+        default: cart-only
+        options: [cart-only]
+        description: "This workflow publishes retained pre-payment cart observations only"
+      bitcoin_adjustment:
+        type: string
+        required: true
+        description: "Separately displayed Bitcoin adjustment in CAD; use 0.00 when none"
+      timestamp_uncertainty:
+        type: string
+        required: true
+        description: "How the source timestamp and any uncertainty are preserved"
+      evidence_root:
+        type: string
+        required: true
+        description: "Repository evidence bundle passed to the retained-original validator"
       owner_reason:
         type: string
         required: true
@@ -77,11 +95,20 @@ jobs:
           DISPLAYED_TOTAL: ${{ inputs.displayed_total }}
           PRODUCT_URL: ${{ inputs.product_url }}
           LINE_ITEMS_JSON: ${{ inputs.line_items_json }}
+          OBSERVATION_SCOPE: ${{ inputs.observation_scope }}
+          BITCOIN_ADJUSTMENT: ${{ inputs.bitcoin_adjustment }}
+          TIMESTAMP_UNCERTAINTY: ${{ inputs.timestamp_uncertainty }}
           OWNER_REASON: ${{ inputs.owner_reason }}
           OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
         run: |
           node --check scripts/owner-manual-publish.mjs
+          test "$SITE_PROFILE" = vip10
+          EVIDENCE_ROOT="${{ inputs.evidence_root }}" node scripts/validate-owner-evidence.mjs
           node scripts/owner-manual-publish.mjs
+          python3 scripts/project-existing-current-record.py
+          node scripts/validate-current-record-projection.mjs public
+          node scripts/validate-current-facing-projection.mjs public
+          node scripts/validate-canonical-snapshot.mjs public
       - name: Write directly to production source
         env:
           RECORD: ${{ steps.owner.outputs.record_reference }}

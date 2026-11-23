@@ -25,3 +25,5 @@ jobs:
         run: node scripts/validate-canonical-snapshot.mjs public
       - name: Validate current record projection
         run: node scripts/validate-current-record-projection.mjs public
+      - name: Validate retained VIP10 candidate evidence
+        run: node scripts/validate-owner-evidence.mjs
