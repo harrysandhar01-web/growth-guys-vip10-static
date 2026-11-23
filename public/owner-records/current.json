@@ -1,7 +1,7 @@
 {
   "code": "VIP10",
-  "record_reference": "vip10-owner-20261123052000-45119593055",
-  "record_url": "/owner-records/vip10-owner-20261123052000-45119593055/",
+  "record_reference": "vip10-owner-20261123052000-45119874256",
+  "record_url": "/owner-records/vip10-owner-20261123052000-45119874256/",
   "status": "Verified cart-only observation",
   "observed_at": "2026-11-23T05:20:00.000Z",
   "method": "Verified cart-only evidence",
@@ -18,7 +18,7 @@
   "subtotal_cad": "50.00",
   "discount_cad": "5.00",
   "total_cad": "36.00",
-  "source_record_reference": "vip10-owner-20261121044300-44867928564",
+  "source_record_reference": "vip10-owner-20261123052000-45119593055",
   "product_url": "https://growthguys.com/shop/semaglutide/",
   "line_items": [
     {
@@ -28,6 +28,6 @@
     }
   ],
   "bitcoin_adjustment_cad": "9.00",
-  "timestamp_precision": "milliseconds",
+  "timestamp_precision": "minute-rounded; exact milliseconds retained in the provenance bundle",
   "timestamp_uncertainty": "Timestamp is supplied in provenance; not visibly embedded in screenshot."
 }

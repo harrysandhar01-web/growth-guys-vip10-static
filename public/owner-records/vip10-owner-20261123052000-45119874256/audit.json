@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "correction",
+  "observationScope": "cart-only",
+  "recordReference": "vip10-owner-20261123052000-45119874256",
+  "sourceRecordReference": "vip10-owner-20261123052000-45119593055",
+  "previousObservedAt": "2026-11-23T05:20:00.000Z",
+  "observedAt": "2026-11-23T05:20:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Correction of public timestamp precision for the already accepted November 23 VIP10 cart-only evidence; no new observation.",
+  "originalEvidence": "/evidence/2026-11-23-vip10-cart-only/vip10-cart-final-original.webp",
+  "bitcoinAdjustmentCad": "9.00",
+  "timestampUncertainty": "Timestamp is supplied in provenance; not visibly embedded in screenshot.",
+  "publishedByRun": "45119874256",
+  "submittedAt": "2026-11-23T05:46:49.960Z"
+}

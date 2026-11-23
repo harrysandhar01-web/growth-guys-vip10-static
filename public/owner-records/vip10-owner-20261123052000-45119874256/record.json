@@ -1,0 +1,33 @@
+{
+  "code": "VIP10",
+  "record_reference": "vip10-owner-20261123052000-45119874256",
+  "record_url": "/owner-records/vip10-owner-20261123052000-45119874256/",
+  "status": "Verified cart-only observation",
+  "observed_at": "2026-11-23T05:20:00.000Z",
+  "method": "Verified cart-only evidence",
+  "product_name": "Semaglutide 5mg - Single vial",
+  "currency": "CAD",
+  "cart_subtotal": "50.00",
+  "discount_amount": "5.00",
+  "observed_total": "36.00",
+  "payment_method_selected": false,
+  "evidence_url": "/evidence/2026-11-23-vip10-cart-only/vip10-cart-final-original.webp",
+  "scope": "Documented pre-payment cart observation; no checkout, identity, address, payment details, order submission or purchase was used.",
+  "observed_timezone": "America/Toronto",
+  "product": "Semaglutide 5mg - Single vial",
+  "subtotal_cad": "50.00",
+  "discount_cad": "5.00",
+  "total_cad": "36.00",
+  "source_record_reference": "vip10-owner-20261123052000-45119593055",
+  "product_url": "https://growthguys.com/shop/semaglutide/",
+  "line_items": [
+    {
+      "name": "Semaglutide 5mg - Single vial",
+      "quantity": 1,
+      "price_cad": "50.00"
+    }
+  ],
+  "bitcoin_adjustment_cad": "9.00",
+  "timestamp_precision": "minute-rounded; exact milliseconds retained in the provenance bundle",
+  "timestamp_uncertainty": "Timestamp is supplied in provenance; not visibly embedded in screenshot."
+}
