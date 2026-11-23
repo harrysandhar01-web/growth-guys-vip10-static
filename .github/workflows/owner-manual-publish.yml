@@ -103,6 +103,7 @@ jobs:
           BITCOIN_ADJUSTMENT: ${{ inputs.bitcoin_adjustment }}
           TIMESTAMP_UNCERTAINTY: ${{ inputs.timestamp_uncertainty }}
           TIMESTAMP_PRECISION: ${{ inputs.timestamp_precision }}
+          ALLOW_HISTORICAL_READBACK: ${{ inputs.mode == 'correction' }}
           OWNER_REASON: ${{ inputs.owner_reason }}
           OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
         run: |

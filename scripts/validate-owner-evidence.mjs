@@ -31,9 +31,15 @@ for (const [name, expected] of Object.entries(provenance.sha256)) {
 
 const current = JSON.parse(fs.readFileSync(path.resolve("public/api/current-record.json"), "utf8"));
 const readback = readJson("live-current-record-readback.json");
-expect(readback.record_reference === current.record_reference, "readback_not_current_authoritative_record");
+const feed = JSON.parse(fs.readFileSync(path.resolve("public/verification-feed.json"), "utf8"));
+const historicalReadbackAllowed = process.env.ALLOW_HISTORICAL_READBACK === "true";
+if (readback.record_reference !== current.record_reference) {
+  expect(historicalReadbackAllowed, "readback_not_current_authoritative_record");
+  expect(feed.records.some(entry => entry.recordReference === readback.record_reference), "historical_readback_absent_from_accepted_feed");
+  expect(new Date(readback.observed_at).getTime() < new Date(current.observed_at).getTime(), "historical_readback_not_older_than_current");
+}
 expect(readback.code === "VIP10" && current.code === "VIP10", "current_record_cross_site_identity");
-expect(readback.status === current.status, "readback_status_mismatch");
+if (readback.record_reference === current.record_reference) expect(readback.status === current.status, "readback_status_mismatch");
 const observed = new Date(provenance.observed_at);
 const previous = new Date(current.observed_at);
 expect(Number.isFinite(observed.getTime()) && observed.getTime() > previous.getTime(), "candidate_not_after_current_record");
