@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "observationScope": "cart-only",
+  "recordReference": "vip10-owner-20261123052000-45119593055",
+  "sourceRecordReference": "vip10-owner-20261121044300-44867928564",
+  "previousObservedAt": "2026-11-21T04:43:00.000Z",
+  "observedAt": "2026-11-23T05:20:00.000Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Owner-approved publication of the retained November 23 VIP10 cart-only evidence bundle.",
+  "originalEvidence": "/evidence/2026-11-23-vip10-cart-only/vip10-cart-final-original.webp",
+  "bitcoinAdjustmentCad": "9.00",
+  "timestampUncertainty": "Timestamp is supplied in provenance; not visibly embedded in screenshot.",
+  "publishedByRun": "45119593055",
+  "submittedAt": "2026-11-23T05:44:01.422Z"
+}
