@@ -47,6 +47,10 @@ on:
         type: string
         required: true
         description: "How the source timestamp and any uncertainty are preserved"
+      timestamp_precision:
+        type: string
+        required: true
+        description: "Precision retained in the public record, for example minute-rounded"
       evidence_root:
         type: string
         required: true
@@ -98,6 +102,7 @@ jobs:
           OBSERVATION_SCOPE: ${{ inputs.observation_scope }}
           BITCOIN_ADJUSTMENT: ${{ inputs.bitcoin_adjustment }}
           TIMESTAMP_UNCERTAINTY: ${{ inputs.timestamp_uncertainty }}
+          TIMESTAMP_PRECISION: ${{ inputs.timestamp_precision }}
           OWNER_REASON: ${{ inputs.owner_reason }}
           OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
         run: |

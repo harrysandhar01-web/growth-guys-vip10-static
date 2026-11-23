@@ -61,6 +61,8 @@ if (subtotal<=0 || discount<=0 || discount>subtotal) throw new Error("positive_d
 if (bitcoin<0 || total<0 || subtotal-discount-bitcoin!==total) throw new Error("cart_total_must_preserve_separate_bitcoin_adjustment");
 const timestampUncertainty=(process.env.TIMESTAMP_UNCERTAINTY || "").trim();
 if (!timestampUncertainty) throw new Error("timestamp_uncertainty_required");
+const timestampPrecision=(process.env.TIMESTAMP_PRECISION || "").trim();
+if (!timestampPrecision) throw new Error("timestamp_precision_required");
 const evidence=(process.env.EVIDENCE_URL || (mode==="correction"?prev.evidence_url:"") || "").trim();
 if (!evidence) throw new Error("evidence_link_required");
 const allowRelative=/^\/(?:evidence|manus-storage|verification-archive|observations|owner-records)\/[a-zA-Z0-9_./-]+\/?$/;
@@ -88,7 +90,7 @@ const record={
   method:"Verified cart-only evidence",
   payment_method_selected:false,
   bitcoin_adjustment_cad:dollars(bitcoin),
-  timestamp_precision:"milliseconds",
+  timestamp_precision:timestampPrecision,
   timestamp_uncertainty:timestampUncertainty,
   scope:"Documented pre-payment cart observation; no checkout, identity, address, payment details, order submission or purchase was used."
 };
