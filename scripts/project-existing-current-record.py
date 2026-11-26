@@ -621,6 +621,32 @@ def routes(public):
     return sorted(paths)
 
 
+def sync_current_sitemap(public, record, dry_run=False):
+    """Project accepted current publication dates; dated archive URLs stay intact."""
+    sitemap_path = public / 'sitemap.xml'
+    source = sitemap_path.read_text()
+    current = {HOST + '/' + relative.removesuffix('index.html') for relative in routes(public)}
+    modified = record['published_at']
+    updated_count = 0
+    def current_url(match):
+        nonlocal updated_count
+        block = match[0]
+        location = re.search(r'<loc>(.*?)</loc>', block)
+        if not location or unescape(location[1]) not in current:
+            return block
+        if '<lastmod>' in block:
+            projected = re.sub(r'<lastmod>.*?</lastmod>', '<lastmod>' + modified + '</lastmod>', block)
+        else:
+            projected = block.replace('</url>', '<lastmod>' + modified + '</lastmod></url>')
+        if projected != block:
+            updated_count += 1
+        return projected
+    projected = re.sub(r'<url\b[^>]*>[\s\S]*?</url>', current_url, source)
+    if projected != source and not dry_run:
+        sitemap_path.write_text(projected)
+    print(f'{updated_count} current sitemap modification dates {"would be synchronized" if dry_run else "synchronized"}; historical URLs untouched')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--public-dir', type=Path, default=Path(__file__).resolve().parents[1] / 'public')
@@ -642,6 +668,7 @@ def main():
             path.write_text(projected)
         print(path.relative_to(public).as_posix())
     print(f'{len(changed)} existing routes {"would be updated" if args.dry_run else "updated"}; accepted JSON/evidence, owner blocks and history untouched')
+    sync_current_sitemap(public, record, args.dry_run)
 
 
 if __name__ == '__main__':
