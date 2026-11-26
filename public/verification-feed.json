@@ -861,6 +861,22 @@
       "cartSubtotal": "50.00",
       "displayedTotal": "36.00",
       "evidenceUrl": "/evidence/2026-11-23-vip10-cart-only/vip10-cart-final-original.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261126064107-45774662911",
+      "recordUrl": "/owner-records/vip10-owner-20261126064107-45774662911/",
+      "checkedAt": "2026-11-26T06:41:07.155Z",
+      "status": "accepted",
+      "recordType": "Automated checkout verification",
+      "productName": "Melanotan-2 10mg - Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "cartSubtotal": "55.00",
+      "discountAmount": "5.50",
+      "displayedTotal": "68.26",
+      "shipping": "20.00",
+      "currencyFeeDiscount": "1.24",
+      "evidenceUrl": "/evidence/2026-11-26-vip10-laptop-checkout/vip10-final-checkout-original.webp"
     }
   ],
   "health": {
