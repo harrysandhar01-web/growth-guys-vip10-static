@@ -16,6 +16,7 @@ on:
         default: false
         description: I approve publication of this retained verified evidence
 permissions:
+  actions: read
   contents: write
   pages: write
   id-token: write
@@ -67,6 +68,22 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+      - name: Wait for uploaded Pages artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          sleep 10
+          for attempt in $(seq 1 20); do
+            count=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --jq '.artifacts | map(select(.name == "github-pages" and .expired == false)) | length')
+            if [ "$count" -gt 0 ]; then
+              echo "Pages artifact metadata visible for this authenticated owner workflow"
+              exit 0
+            fi
+            sleep 8
+          done
+          echo '::error::Uploaded Pages artifact metadata not visible'
+          exit 1
       - name: Publish validated GitHub Pages output
         id: deploy
         uses: actions/deploy-pages@v4
