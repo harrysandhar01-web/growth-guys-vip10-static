@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -31,6 +32,22 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+      - name: Wait for uploaded Pages artifact metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          sleep 10
+          for attempt in $(seq 1 20); do
+            count=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --jq '.artifacts | map(select(.name == "github-pages" and .expired == false)) | length')
+            if [ "$count" -gt 0 ]; then
+              echo "Pages artifact metadata visible"
+              exit 0
+            fi
+            sleep 8
+          done
+          echo '::error::Uploaded Pages artifact metadata not visible'
+          exit 1
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
