@@ -1,0 +1,106 @@
+name: Owner approved automated checkout publication
+on:
+  workflow_dispatch:
+    inputs:
+      evidence_package:
+        type: string
+        required: true
+        description: Site-specific successful laptop checkout package; original image and source hashes must validate
+      owner_reason:
+        type: string
+        required: true
+        description: Owner's publication instruction for this verified observation
+      owner_confirmed:
+        type: boolean
+        required: true
+        default: false
+        description: I approve publication of this retained verified evidence
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: owner-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.actor == 'harrysandhar01-web' && inputs.owner_confirmed == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source evidence and build owner-approved checkout record
+        id: owner
+        env:
+          SITE_PROFILE: vip10
+          EVIDENCE_PACKAGE: ${{ inputs.evidence_package }}
+          OWNER_REASON: ${{ inputs.owner_reason }}
+          OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
+        run: |
+          set -euo pipefail
+          node --check scripts/validate-checkout-evidence.mjs
+          node --check scripts/owner-checkout-publish.mjs
+          node scripts/owner-checkout-publish.mjs
+      - name: Commit validated current records and projections
+        env:
+          RECORD: ${{ steps.owner.outputs.record_reference }}
+        run: |
+          set -euo pipefail
+          test -n "$RECORD"
+          grep -q "$RECORD" public/api/current-record.json
+          grep -q "$RECORD" public/index.html
+          git config user.name "Owner-Approved GitHub Publication"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/
+          git diff --cached --quiet && exit 1
+          git commit -m "Owner approved automated checkout record $RECORD"
+          git push origin HEAD:main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+      - name: Publish validated GitHub Pages output
+        id: deploy
+        uses: actions/deploy-pages@v4
+      - name: Confirm authoritative live record and homepage
+        env:
+          RECORD: ${{ steps.owner.outputs.record_reference }}
+          DOMAIN: growthguysvip10.ca
+          PROFILE: vip10
+          EVIDENCE_PACKAGE_INPUT: ${{ inputs.evidence_package }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          for attempt in $(seq 1 20); do
+            curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://$DOMAIN/api/current-record.json?check=$GITHUB_RUN_ID-$attempt" -o /tmp/live-record.json || true
+            curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://$DOMAIN/?check=$GITHUB_RUN_ID-$attempt" -o /tmp/live-home.html || true
+            if node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync("/tmp/live-record.json"));const h=fs.readFileSync("/tmp/live-home.html","utf8");if(r.record_reference!==process.env.RECORD||!h.includes(process.env.RECORD)||!h.includes(r.total_cad)||!h.includes(r.product_name))process.exit(1)'; then
+              node - <<'NODE'
+          const fs = require('fs');
+          const record = JSON.parse(fs.readFileSync('/tmp/live-record.json'));
+          const receipt = { status:'published_and_live_confirmed', profile:process.env.PROFILE, code:record.code, record_reference:record.record_reference, observed_at:record.observed_at, workflow_run_id:process.env.GITHUB_RUN_ID, actor:process.env.GITHUB_ACTOR, evidence_package:process.env.EVIDENCE_PACKAGE_INPUT, live_record:record, confirmed_at:new Date().toISOString() };
+          fs.writeFileSync('artifacts/checkout-publication-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt));
+          NODE
+              exit 0
+            fi
+            sleep 8
+          done
+          echo '::error::Live current record not yet confirmed'
+          exit 1
+      - name: Save authoritative publication receipt
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkout-publication-receipt
+          path: artifacts/checkout-publication-receipt.json
+          if-no-files-found: error
+          retention-days: 30
