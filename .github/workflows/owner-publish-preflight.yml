@@ -55,7 +55,7 @@ jobs:
                 cp public/evidence/2026-11-23-vip10-cart-only/live-current-record-readback.json public/api/current-record.json
               fi
               PUBLICATION_MODE="$mode" node "$GITHUB_WORKSPACE/scripts/owner-manual-publish.mjs"
-              python3 "$GITHUB_WORKSPACE/scripts/project-existing-current-record.py"
+              python3 "$GITHUB_WORKSPACE/scripts/project-existing-current-record.py" --public-dir public
               node "$GITHUB_WORKSPACE/scripts/validate-current-record-projection.mjs" public
               node "$GITHUB_WORKSPACE/scripts/validate-current-facing-projection.mjs" public
               node "$GITHUB_WORKSPACE/scripts/validate-canonical-snapshot.mjs" public
