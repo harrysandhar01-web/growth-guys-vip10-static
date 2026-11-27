@@ -136,7 +136,7 @@ for(const file of ["index.html",cfg.route+"/index.html","growth-guys-discount-co
   let html=read(file);
   if(!/<body(?:\s[^>]*)?>/i.test(html)) throw Error("missing_body_in_"+file);
   html=html.replace(/<!-- OWNER_RECORD_START -->[\s\S]*?<!-- OWNER_RECORD_END -->/g,"");
-  html=html.replace(/(<body(?:\s[^>]*)?>)/i,"$1"+badge);
+  html=html.replace(/(<body(?:\s[^>]*)?>)/i,(_match,opening)=>opening+badge);
   if(file==="index.html" || file===cfg.route+"/index.html"){
     html=html.replace(/<section class="current-record-refresh"[\s\S]*?<\/section>/i,"");
     html=html.replace(/<strong>Latest verified checkout record — [^<]+<\/strong>/i,"<strong>Latest verified checkout record — "+dateLabel+"</strong>");
