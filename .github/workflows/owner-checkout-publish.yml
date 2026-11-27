@@ -17,6 +17,10 @@ on:
         description: I approve publication of this retained verified evidence
   repository_dispatch:
     types: [owner-checkout-package]
+  push:
+    branches: [main]
+    paths:
+      - 'operations/owner-checkout-request.json'
 permissions:
   actions: read
   contents: write
@@ -30,22 +34,40 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      evidence_package: ${{ steps.request.outputs.evidence_package }}
+      owner_reason: ${{ steps.request.outputs.owner_reason }}
     steps:
-      - name: Diagnose dispatch and enforce existing authorization
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Resolve authenticated publication request
+        id: request
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref }}
           CONFIRMED: ${{ inputs.owner_confirmed == true || (github.event_name == 'repository_dispatch' && github.event.client_payload.owner_confirmed == true) }}
+          DISPATCH_PACKAGE: ${{ inputs.evidence_package || github.event.client_payload.evidence_package }}
+          DISPATCH_REASON: ${{ inputs.owner_reason || github.event.client_payload.owner_reason }}
         run: |
-          set -euo pipefail
-          if [[ "$ACTOR" != "harrysandhar01-web" || "$REF" != "refs/heads/main" || "$CONFIRMED" != "true" ]]; then
-            echo "::error::Checkout publication not authorized: actor=$ACTOR ref=$REF owner_confirmed=$CONFIRMED event=$GITHUB_EVENT_NAME"
-            exit 1
-          fi
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const e=process.env;
+          if(e.ACTOR!=='harrysandhar01-web'||e.REF!=='refs/heads/main')throw Error('Publication requires authenticated owner on main');
+          const req=e.GITHUB_EVENT_NAME==='push'
+            ? JSON.parse(fs.readFileSync('operations/owner-checkout-request.json','utf8'))
+            : {site:'VIP10',owner_confirmed:e.CONFIRMED==='true',evidence_package:e.DISPATCH_PACKAGE,owner_reason:e.DISPATCH_REASON};
+          if(req.site!=='VIP10'||req.owner_confirmed!==true)throw Error('Publication request is not approved for this site');
+          if(typeof req.evidence_package!=='string'||!/^public\/evidence\/[a-zA-Z0-9_-]+\/checkout-package\.json$/.test(req.evidence_package))throw Error('Expected site-specific retained checkout package');
+          if(typeof req.owner_reason!=='string'||!req.owner_reason.trim()||req.owner_reason.length>700||/[\r\n]/.test(req.owner_reason))throw Error('Expected a single-line owner publication instruction');
+          if(!fs.existsSync(req.evidence_package))throw Error('Retained checkout evidence package missing');
+          fs.appendFileSync(e.GITHUB_OUTPUT,'evidence_package='+req.evidence_package+'\nowner_reason='+req.owner_reason+'\n');
+          NODE
   publish:
     needs: authorize
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 30
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -60,9 +82,9 @@ jobs:
         id: owner
         env:
           SITE_PROFILE: vip10
-          EVIDENCE_PACKAGE: ${{ inputs.evidence_package || github.event.client_payload.evidence_package }}
-          OWNER_REASON: ${{ inputs.owner_reason || github.event.client_payload.owner_reason }}
-          OWNER_CONFIRMED: ${{ inputs.owner_confirmed == true || github.event.client_payload.owner_confirmed == true }}
+          EVIDENCE_PACKAGE: ${{ needs.authorize.outputs.evidence_package }}
+          OWNER_REASON: ${{ needs.authorize.outputs.owner_reason }}
+          OWNER_CONFIRMED: 'true'
         run: |
           set -euo pipefail
           if [[ ! "$EVIDENCE_PACKAGE" =~ ^public/evidence/[a-zA-Z0-9_-]+/checkout-package\.json$ ]]; then
@@ -127,7 +149,7 @@ jobs:
           RECORD: ${{ steps.owner.outputs.record_reference }}
           DOMAIN: growthguysvip10.ca
           PROFILE: vip10
-          EVIDENCE_PACKAGE_INPUT: ${{ inputs.evidence_package || github.event.client_payload.evidence_package }}
+          EVIDENCE_PACKAGE_INPUT: ${{ needs.authorize.outputs.evidence_package }}
         run: |
           set -euo pipefail
           mkdir -p artifacts
