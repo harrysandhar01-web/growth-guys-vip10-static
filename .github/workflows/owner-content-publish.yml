@@ -103,11 +103,17 @@ jobs:
             git push origin HEAD:main
           fi
       - uses: actions/configure-pages@v5
+      - name: Generate optional derived public indexes
+        continue-on-error: true
+        run: node scripts/build-public-record-indexes.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
       - uses: actions/deploy-pages@v4
         id: deploy
+      - name: Confirm optional public index availability
+        continue-on-error: true
+        run: node scripts/confirm-public-record-indexes.mjs
       - name: Confirm owner update and image live
         env:
           SITE_ORIGIN: https://growthguysvip10.ca
