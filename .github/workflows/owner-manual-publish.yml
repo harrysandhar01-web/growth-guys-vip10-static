@@ -132,12 +132,18 @@ jobs:
           git commit -m "Owner approved vip10 record $RECORD"
           git push origin HEAD:main
       - uses: actions/configure-pages@v5
+      - name: Generate optional public history and evidence indexes
+        continue-on-error: true
+        run: node scripts/build-public-record-indexes.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
       - name: Deploy to actual GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+      - name: Confirm optional public history and evidence indexes
+        continue-on-error: true
+        run: node scripts/confirm-public-record-indexes.mjs
       - name: Confirm canonical routes and slash variants before publication receipt
         env:
           SITE_CODE: VIP10
