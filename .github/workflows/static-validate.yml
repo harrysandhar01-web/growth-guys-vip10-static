@@ -2,6 +2,12 @@ name: Validate static staging output
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      audit_candidate:
+        description: 'Explicitly audit retained candidate for eligibility as a new record'
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -25,5 +31,10 @@ jobs:
         run: node scripts/validate-canonical-snapshot.mjs public
       - name: Validate current record projection
         run: node scripts/validate-current-record-projection.mjs public
-      - name: Validate retained VIP10 candidate evidence
+  candidate-audit:
+    if: github.event_name == 'workflow_dispatch' && inputs.audit_candidate == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate retained candidate independently of current site maintenance
         run: node scripts/validate-owner-evidence.mjs
