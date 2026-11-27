@@ -1,0 +1,135 @@
+name: Publish owner-submitted update
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        type: string
+        required: true
+      text:
+        type: string
+        required: true
+      image_path:
+        type: string
+        required: false
+        description: Optional preuploaded owner-uploads/date/photo.png
+      owner_confirmed:
+        type: boolean
+        required: true
+        default: false
+        description: Authorize public posting; no private information included
+  push:
+    paths:
+      - 'scripts/publish-owner-update.mjs'
+      - '.github/workflows/owner-content-publish.yml'
+permissions:
+  contents: read
+jobs:
+  preflight:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test owner content independently in temporary copy
+        env:
+          SITE_PROFILE: vip10
+          OWNER_CONFIRMED: 'true'
+          UPDATE_TITLE: Offline test
+          UPDATE_TEXT: 'Test only: <script>not executable</script>'
+          UPDATE_IMAGE: owner-uploads/test/photo.png
+        run: |
+          set -euo pipefail
+          node --check scripts/publish-owner-update.mjs
+          work=$(mktemp -d)
+          mkdir -p "$work/public/api" "$work/public/$SITE_PROFILE" "$work/owner-uploads/test"
+          cp public/{index.html,sitemap.xml,static-route-map.json,deployment-manifest.json} "$work/public/"
+          cp "public/$SITE_PROFILE/index.html" "$work/public/$SITE_PROFILE/"
+          cp public/api/current-record.json "$work/public/api/"
+          printf '%s' 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jJ3sAAAAASUVORK5CYII=' | base64 -d > "$work/owner-uploads/test/photo.png"
+          cd "$work"
+          sha256sum public/api/current-record.json > before.sha
+          export GITHUB_ACTOR=harrysandhar01-web
+          node "$GITHUB_WORKSPACE/scripts/publish-owner-update.mjs"
+          node "$GITHUB_WORKSPACE/scripts/publish-owner-update.mjs"
+          sha256sum -c before.sha
+          grep -q 'not independently verified' public/owner-updates/index.html
+          grep -q '&lt;script&gt;' public/owner-updates/index.html
+          grep -q 'OWNER_UPDATE_START' public/index.html
+          node -e 'const fs=require("fs"),s=JSON.parse(fs.readFileSync("public/owner-updates/index.json"));if(s.updates.length!==1||s.updates[0].verification_status!=="not_independently_verified")process.exit(1)'
+          cmp owner-uploads/test/photo.png "public/owner-updates/owner-$GITHUB_RUN_ID/submitted-image.png"
+  publish:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.actor == 'harrysandhar01-web' && inputs.owner_confirmed == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Stage owner content without verification approval
+        env:
+          SITE_PROFILE: vip10
+          OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
+          UPDATE_TITLE: ${{ inputs.title }}
+          UPDATE_TEXT: ${{ inputs.text }}
+          UPDATE_IMAGE: ${{ inputs.image_path }}
+        run: |
+          set -euo pipefail
+          node scripts/publish-owner-update.mjs
+          git diff --exit-code -- public/api public/owner-records public/owner-publication-state.json public/verification-feed.json public/verification-archive public/evidence
+          git add public/owner-updates public/index.html "public/$SITE_PROFILE/index.html" public/sitemap.xml public/static-route-map.json public/deployment-manifest.json
+          git config user.name "Owner Content Publisher"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish owner-submitted content"
+            git push origin HEAD:main
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+      - uses: actions/deploy-pages@v4
+        id: deploy
+      - name: Confirm owner update and image live
+        env:
+          SITE_ORIGIN: https://growthguysvip10.ca
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const origin=process.env.SITE_ORIGIN;
+          const route='/owner-updates/owner-'+process.env.GITHUB_RUN_ID+'/';
+          const entry=JSON.parse(fs.readFileSync('public/owner-updates/index.json')).updates.find(x=>x.route===route);
+          if (!entry) throw Error('missing staged owner update');
+          let error;
+          for(let i=1;i<=10;i++){
+            try{
+              const get=async p=>{
+                const u=new URL(p,origin);u.searchParams.set('readback',process.env.GITHUB_RUN_ID+'-'+i);
+                const r=await fetch(u,{headers:{'Cache-Control':'no-cache, no-store'},signal:AbortSignal.timeout(15000)});
+                if(!r.ok||new URL(r.url).origin!==origin)throw Error('HTTP/origin mismatch '+p);
+                return Buffer.from(await r.arrayBuffer());
+              };
+              const [home,latest,detail,variant,sitemap]=await Promise.all(['/', '/owner-updates/',route,route.slice(0,-1),'/sitemap.xml'].map(get));
+              if(!home.toString().includes(route)||!latest.toString().includes(entry.published_at)||![detail,variant].every(x=>x.toString().includes(origin+route)&&x.toString().includes(entry.published_at))||!sitemap.toString().includes(origin+route))throw Error('owner content not live');
+              if(entry.image_url&&crypto.createHash('sha256').update(await get(entry.image_url)).digest('hex')!==entry.image_sha256)throw Error('image mismatch');
+              console.log(JSON.stringify({status:'owner_content_live_confirmed',route,publication_date:entry.published_at,verification_status:entry.verification_status}));
+              process.exit(0);
+            }catch(e){error=e;console.log('Readback '+i+': '+e.message);if(i<10)await new Promise(r=>setTimeout(r,8000));}
+          }
+          throw error;
+          NODE
