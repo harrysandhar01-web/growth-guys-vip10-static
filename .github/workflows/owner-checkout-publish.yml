@@ -58,6 +58,7 @@ jobs:
           node --check scripts/owner-checkout-publish.mjs
           node scripts/owner-checkout-publish.mjs
       - name: Commit validated current records and projections
+        if: steps.owner.outputs.reused != 'true'
         env:
           RECORD: ${{ steps.owner.outputs.record_reference }}
         run: |
