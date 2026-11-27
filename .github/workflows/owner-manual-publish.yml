@@ -104,13 +104,14 @@ jobs:
           TIMESTAMP_UNCERTAINTY: ${{ inputs.timestamp_uncertainty }}
           TIMESTAMP_PRECISION: ${{ inputs.timestamp_precision }}
           ALLOW_HISTORICAL_READBACK: ${{ inputs.mode == 'correction' }}
+          EVIDENCE_ROOT: ${{ inputs.evidence_root }}
           OWNER_REASON: ${{ inputs.owner_reason }}
           OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
         run: |
           node --check scripts/owner-manual-publish.mjs
           test "$SITE_PROFILE" = vip10
           # Automated evidence validation is advisory; authenticated owner review is required.
-          EVIDENCE_ROOT="${{ inputs.evidence_root }}" node scripts/validate-owner-evidence.mjs || echo "::warning::Automated evidence review failed; proceeding under explicit owner confirmation"
+          node scripts/validate-owner-evidence.mjs || echo "::warning::Automated evidence review failed; proceeding under explicit owner confirmation"
           node scripts/owner-manual-publish.mjs
           python3 scripts/project-existing-current-record.py
           node scripts/validate-current-record-projection.mjs public
@@ -143,6 +144,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in $(seq 1 12); do
+            rm -f /tmp/readback.json /tmp/readback.html
             curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://growthguysvip10.ca/api/current-record.json?check=$GITHUB_RUN_ID-$attempt" -o /tmp/readback.json || true
             curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://growthguysvip10.ca/?check=$GITHUB_RUN_ID-$attempt" -o /tmp/readback.html || true
             if node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync("/tmp/readback.json"));const h=fs.readFileSync("/tmp/readback.html","utf8");if(r.record_reference!==process.env.RECORD||!h.includes("data-owner-current-record="+String.fromCharCode(34)+process.env.RECORD+String.fromCharCode(34)))process.exit(1)'; then
