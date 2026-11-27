@@ -29,6 +29,10 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Validate current accepted record and canonical routes locally
+        run: |
+          node scripts/validate-canonical-snapshot.mjs public
+          node scripts/validate-current-record-projection.mjs public
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
