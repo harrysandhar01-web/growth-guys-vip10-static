@@ -9,6 +9,7 @@ function assertConfiguration() { if (!['VIP10','GROWTH10'].includes(code) || ori
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
 assert(expected.code === code && expected.record_reference && expected.record_url, 'source identity missing');
 let lastError;
+let fullAuditStarted = false;
 for (let attempt = 1; attempt <= 10; attempt++) {
   try {
     const get = async (path) => {
@@ -56,13 +57,16 @@ for (let attempt = 1; attempt <= 10; attempt++) {
         console.log('External historical evidence URL not fetched; source reference preserved.');
       }
     }
-    await confirmAllSlashVariants(expected, recordDir);
-    await confirmApiAliases(expected);
+    fullAuditStarted = true;
+    const audits = await Promise.allSettled([confirmAllSlashVariants(expected, recordDir), confirmApiAliases(expected)]);
+    const auditErrors = audits.filter(x=>x.status==='rejected').map(x=>x.reason.message);
+    assert(!auditErrors.length, auditErrors.join('; '));
     console.log(JSON.stringify({status:'published_and_live_confirmed',code,record_reference:expected.record_reference,observed_at:expected.observed_at,run_id:process.env.GITHUB_RUN_ID,confirmed_at:new Date().toISOString()}));
     process.exit(0);
   } catch (error) {
     lastError = error;
     console.log('Readback attempt ' + attempt + ': ' + error.message);
+    if (fullAuditStarted) break; // per-route retries already ran; do not repeat the entire site crawl
     if (attempt < 10) await new Promise(resolve => setTimeout(resolve, 8000));
   }
 }
