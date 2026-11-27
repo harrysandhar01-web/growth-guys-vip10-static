@@ -56,6 +56,8 @@ for (let attempt = 1; attempt <= 10; attempt++) {
         console.log('External historical evidence URL not fetched; source reference preserved.');
       }
     }
+    await confirmAllSlashVariants(expected, recordDir);
+    await confirmApiAliases(expected);
     console.log(JSON.stringify({status:'published_and_live_confirmed',code,record_reference:expected.record_reference,observed_at:expected.observed_at,run_id:process.env.GITHUB_RUN_ID,confirmed_at:new Date().toISOString()}));
     process.exit(0);
   } catch (error) {
@@ -65,3 +67,73 @@ for (let attempt = 1; attempt <= 10; attempt++) {
   }
 }
 throw lastError;
+
+/** Audit all declared directory routes, not just the three primary routes.
+ * Historical pages are compared to their own deployed source, not relabelled as current. */
+async function confirmAllSlashVariants(expected, recordDir) {
+  const routes = JSON.parse(readFileSync('public/static-route-map.json','utf8'));
+  const targets = new Map();
+  for (const [route, file] of Object.entries(routes)) {
+    if (route !== '/' && route.endsWith('/') && typeof file === 'string' && file.endsWith('/index.html') && /^\/[a-zA-Z0-9_./-]+$/.test(route) && !route.split('/').includes('..')) targets.set(route, file);
+  }
+  targets.set('/'+slug+'/', '/'+slug+'/index.html');
+  targets.set('/verification-archive/', '/verification-archive/index.html');
+  targets.set(recordDir, recordDir+'index.html');
+  const digest = b => createHash('sha256').update(b).digest('hex');
+  const report = [];
+  const queue = [...targets.entries()];
+  const fetchPage = async (route, fresh) => {
+    const url = new URL(route, origin);
+    if (fresh) url.searchParams.set('variant_check', (process.env.GITHUB_RUN_ID || 'manual')+'-'+Date.now());
+    const res = await fetch(url, {headers:fresh?{'Cache-Control':'no-cache, no-store','Pragma':'no-cache'}:{},signal:AbortSignal.timeout(12000)});
+    assert(res.ok && new URL(res.url).origin === origin,'variant HTTP/origin mismatch '+route);
+    return {body:Buffer.from(await res.arrayBuffer()),final:res.url};
+  };
+  const workers = Array.from({length:8}, async () => {
+    while (queue.length) {
+      const [route,file] = queue.shift();
+      let last;
+      for(let retry=1;retry<=3;retry++){
+        try {
+          const local = readFileSync('public'+file);
+          const variants = [route, route.slice(0,-1)];
+          const results = await Promise.all(variants.flatMap(v=>[false,true].map(async fresh=>{
+            const result=await fetchPage(v,fresh);
+            assert(digest(result.body)===digest(local),'stale or different content '+v+' cache-busted='+fresh);
+            return {path:v,cache_busted:fresh,final:result.final,status:'match'};
+          })));
+          report.push({route,status:'match',variants:results}); last=null; break;
+        } catch(err){last=err.message;if(retry<3)await new Promise(r=>setTimeout(r,1000*retry));}
+      }
+      if(last) report.push({route,status:'unconfirmed',error:last});
+    }
+  });
+  await Promise.all(workers);
+  // Root's explicit index.html is also a supported static entry point.
+  try {
+    const source=readFileSync('public/index.html');
+    for(const variant of ['/','/index.html'])for(const fresh of [false,true]){
+      const result=await fetchPage(variant,fresh);
+      assert(digest(result.body)===digest(source),'homepage variant mismatch '+variant);
+      report.push({route:variant,cache_busted:fresh,status:'match',final:result.final});
+    }
+  }catch(err){report.push({route:'/index.html',status:'unconfirmed',error:err.message});}
+  console.log(JSON.stringify({stage:'all_declared_slash_variants',code,record_reference:expected.record_reference,results:report}));
+  const failures=report.filter(x=>x.status!=='match');
+  assert(!failures.length,'slash variant readback unresolved: '+failures.map(x=>x.route).join(', '));
+}
+async function confirmApiAliases(expected) {
+  const aliases=['/api/current-record.json','/api/current-record','/owner-records/current.json','/verification-feed.json','/api/verification-feed.json','/feed.xml','/api/verification-history.json','/api/evidence-index.json','/sitemap.xml'];
+  for(const route of aliases) {
+    const local=readFileSync('public'+route);
+    for(const fresh of [false,true]){
+      const u=new URL(route,origin);
+      if(fresh)u.searchParams.set('alias_check',(process.env.GITHUB_RUN_ID||'manual')+'-'+Date.now());
+      const r=await fetch(u,{headers:fresh?{'Cache-Control':'no-cache, no-store','Pragma':'no-cache'}:{},signal:AbortSignal.timeout(12000)});
+      assert(r.ok&&new URL(r.url).origin===origin,'API alias unavailable '+route);
+      const remote=Buffer.from(await r.arrayBuffer());
+      assert(createHash('sha256').update(remote).digest('hex')===createHash('sha256').update(local).digest('hex'),'API/feed/cache mismatch '+route);
+      console.log(JSON.stringify({stage:'alias_readback',route,cache_busted:fresh,status:'match',record_reference:expected.record_reference}));
+    }
+  }
+}
