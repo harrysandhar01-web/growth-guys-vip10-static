@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 const expected = JSON.parse(readFileSync('public/api/current-record.json', 'utf8'));
 const origin = process.env.SITE_ORIGIN;
@@ -80,6 +80,17 @@ async function confirmAllSlashVariants(expected, recordDir) {
   for (const [route, file] of Object.entries(routes)) {
     if (route !== '/' && route.endsWith('/') && typeof file === 'string' && file.endsWith('/index.html') && /^\/[a-zA-Z0-9_./-]+$/.test(route) && !route.split('/').includes('..')) targets.set(route, file);
   }
+  // Discover deployed directory pages even when omitted from the route map.
+  function discover(dir, prefix='') {
+    for (const entry of readdirSync(dir,{withFileTypes:true})) {
+      if (entry.isDirectory()) discover(dir+'/'+entry.name,prefix+'/'+entry.name);
+      else if (entry.isFile() && entry.name==='index.html' && prefix) {
+        const route=prefix.split('/').map(encodeURIComponent).join('/')+'/';
+        if (!targets.has(route)) targets.set(route,prefix+'/index.html');
+      }
+    }
+  }
+  discover('public');
   targets.set('/'+slug+'/', '/'+slug+'/index.html');
   targets.set('/verification-archive/', '/verification-archive/index.html');
   targets.set(recordDir, recordDir+'index.html');
@@ -102,11 +113,18 @@ async function confirmAllSlashVariants(expected, recordDir) {
           const local = readFileSync('public'+file);
           const variants = [route, route.slice(0,-1), route+'index.html'];
           const results = await Promise.all(variants.flatMap(v=>[false,true].map(async fresh=>{
-            const result=await fetchPage(v,fresh);
-            assert(digest(result.body)===digest(local),'stale or different content '+v+' cache-busted='+fresh);
-            return {path:v,cache_busted:fresh,final:result.final,status:'match'};
+            try {
+              const result=await fetchPage(v,fresh);
+              assert(digest(result.body)===digest(local),'stale or different content');
+              return {path:v,cache_busted:fresh,final:result.final,status:'match'};
+            } catch(error) {
+              return {path:v,cache_busted:fresh,status:'unconfirmed',error:error.message};
+            }
           })));
-          report.push({route,status:'match',variants:results}); last=null; break;
+          const failed=results.filter(x=>x.status!=='match');
+          if(!failed.length){report.push({route,status:'match',variants:results});last=null;break;}
+          if(retry===3){report.push({route,status:'unconfirmed',variants:results});last=null;break;}
+          throw Error(failed.map(x=>x.path+' cache-busted='+x.cache_busted+': '+x.error).join('; '));
         } catch(err){last=err.message;if(retry<3)await new Promise(r=>setTimeout(r,1000*retry));}
       }
       if(last) report.push({route,status:'unconfirmed',error:last});
