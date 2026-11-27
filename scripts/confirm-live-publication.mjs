@@ -100,7 +100,7 @@ async function confirmAllSlashVariants(expected, recordDir) {
       for(let retry=1;retry<=3;retry++){
         try {
           const local = readFileSync('public'+file);
-          const variants = [route, route.slice(0,-1)];
+          const variants = [route, route.slice(0,-1), route+'index.html'];
           const results = await Promise.all(variants.flatMap(v=>[false,true].map(async fresh=>{
             const result=await fetchPage(v,fresh);
             assert(digest(result.body)===digest(local),'stale or different content '+v+' cache-busted='+fresh);
