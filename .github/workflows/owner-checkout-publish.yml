@@ -21,7 +21,7 @@ permissions:
   pages: write
   id-token: write
 concurrency:
-  group: owner-publish
+  group: pages
   cancel-in-progress: false
 jobs:
   publish:
