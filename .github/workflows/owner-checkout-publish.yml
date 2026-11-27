@@ -15,6 +15,8 @@ on:
         required: true
         default: false
         description: I approve publication of this retained verified evidence
+  repository_dispatch:
+    types: [owner-checkout-package]
 permissions:
   actions: read
   contents: write
@@ -25,7 +27,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    if: github.actor == 'harrysandhar01-web' && inputs.owner_confirmed == true
+    if: github.actor == 'harrysandhar01-web' && github.ref == 'refs/heads/main' && (inputs.owner_confirmed == true || (github.event_name == 'repository_dispatch' && github.event.client_payload.owner_confirmed == true))
     runs-on: ubuntu-latest
     timeout-minutes: 18
     environment:
@@ -42,11 +44,16 @@ jobs:
         id: owner
         env:
           SITE_PROFILE: vip10
-          EVIDENCE_PACKAGE: ${{ inputs.evidence_package }}
-          OWNER_REASON: ${{ inputs.owner_reason }}
-          OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
+          EVIDENCE_PACKAGE: ${{ inputs.evidence_package || github.event.client_payload.evidence_package }}
+          OWNER_REASON: ${{ inputs.owner_reason || github.event.client_payload.owner_reason }}
+          OWNER_CONFIRMED: ${{ inputs.owner_confirmed == true || github.event.client_payload.owner_confirmed == true }}
         run: |
           set -euo pipefail
+          if [[ ! "$EVIDENCE_PACKAGE" =~ ^public/evidence/[a-zA-Z0-9_-]+/checkout-package\.json$ ]]; then
+            echo '::error::Expected a retained checkout package inside this site repository'
+            exit 1
+          fi
+          test -s "$EVIDENCE_PACKAGE"
           node --check scripts/validate-checkout-evidence.mjs
           node --check scripts/owner-checkout-publish.mjs
           node scripts/owner-checkout-publish.mjs
@@ -92,11 +99,12 @@ jobs:
           RECORD: ${{ steps.owner.outputs.record_reference }}
           DOMAIN: growthguysvip10.ca
           PROFILE: vip10
-          EVIDENCE_PACKAGE_INPUT: ${{ inputs.evidence_package }}
+          EVIDENCE_PACKAGE_INPUT: ${{ inputs.evidence_package || github.event.client_payload.evidence_package }}
         run: |
           set -euo pipefail
           mkdir -p artifacts
           for attempt in $(seq 1 20); do
+            rm -f /tmp/live-record.json /tmp/live-home.html
             curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://$DOMAIN/api/current-record.json?check=$GITHUB_RUN_ID-$attempt" -o /tmp/live-record.json || true
             curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://$DOMAIN/?check=$GITHUB_RUN_ID-$attempt" -o /tmp/live-home.html || true
             if node -e 'const fs=require("fs");const r=JSON.parse(fs.readFileSync("/tmp/live-record.json"));const h=fs.readFileSync("/tmp/live-home.html","utf8");if(r.record_reference!==process.env.RECORD||!h.includes(process.env.RECORD)||!h.includes(r.total_cad)||!h.includes(r.product_name))process.exit(1)'; then
