@@ -21,6 +21,14 @@ const packageInput = process.env.EVIDENCE_PACKAGE;
 const validation = validateCheckoutPackage(packageInput, profile);
 const candidate = JSON.parse(fs.readFileSync(packageInput, 'utf8'));
 const previous = JSON.parse(fs.readFileSync('public/api/current-record.json', 'utf8'));
+if (validation.status === 'validated_existing_checkout_record') {
+  if (preview) throw new Error('already_current_record_needs_no_preview');
+  const checks = ['validate-current-record-projection.mjs', profile === 'vip10' ? 'validate-current-facing-projection.mjs' : 'validate-customer-facing-site.mjs', 'validate-canonical-snapshot.mjs'];
+  for (const check of checks) execFileSync('node', [path.join(sourceRoot, 'scripts', check), 'public'], { cwd: sourceRoot, stdio: 'inherit' });
+  if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, 'record_reference=' + previous.record_reference + '\nreused=true\n');
+  console.log(JSON.stringify({status:'existing_accepted_record_reused', profile, record_reference:previous.record_reference, observed_at:previous.observed_at}));
+  process.exit(0);
+}
 const now = new Date().toISOString();
 const runId = preview ? '0' : process.env.GITHUB_RUN_ID;
 const id = `${profile}-owner-${candidate.observed_at.replace(/[-:TZ.]/g, '').slice(0,14)}-${runId}`;
