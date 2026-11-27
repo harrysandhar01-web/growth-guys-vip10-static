@@ -143,3 +143,9 @@ jobs:
           }
           throw error;
           NODE
+
+      - name: Confirm all declared slash variants and current API aliases after manual update
+        env:
+          SITE_CODE: VIP10
+          SITE_ORIGIN: https://growthguysvip10.ca
+        run: node scripts/confirm-live-publication.mjs
