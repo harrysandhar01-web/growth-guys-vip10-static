@@ -84,9 +84,19 @@ export function validateCheckoutPackage(packagePath, profile) {
   expect(text(html).includes('$' + p.charge_usd) && text(html).includes('USD'), 'source_displayed_USD_charge');
   expect(p.form_value_audit && Object.values(p.form_value_audit).every(value => value === ''), 'blank_personal_and_payment_fields_required');
   const previous = JSON.parse(fs.readFileSync('public/api/current-record.json', 'utf8'));
-  expect(previous.code === cfg.code && previous.record_reference === p.previous_record_reference, 'previous_authoritative_site_record_mismatch');
-  expect(observed > new Date(previous.observed_at), 'new_observation_must_follow_current_record');
-  return { status: 'validated_checkout_candidate', profile, code: cfg.code, event_key: p.event_key, observed_at: p.observed_at, package_sha256: digest(fs.readFileSync(absolute)), screenshot_sha256: p.original_screenshot.sha256, subtotal: p.subtotal, discount: p.discount, shipping: p.shipping, currency_fee_discount: p.currency_fee_discount, total: p.total, validated_at: new Date().toISOString() };
+  expect(previous.code === cfg.code, 'previous_authoritative_site_record_mismatch');
+  const alreadyCurrent = previous.evidence_event_key === p.event_key;
+  if (alreadyCurrent) {
+    expect(previous.source_record_reference === p.previous_record_reference && previous.observed_at === p.observed_at &&
+      previous.evidence_sha256 === p.original_screenshot.sha256 && previous.product_name === p.product &&
+      previous.product_url === p.product_url && previous.subtotal_cad === p.subtotal && previous.discount_cad === p.discount &&
+      previous.shipping_cad === p.shipping && previous.currency_fee_discount_cad === p.currency_fee_discount &&
+      previous.total_cad === p.total && previous.charge_usd === p.charge_usd && previous.publication_phase === 'owner_accepted', 'already_current_evidence_mismatch');
+  } else {
+    expect(previous.record_reference === p.previous_record_reference, 'previous_authoritative_site_record_mismatch');
+    expect(observed > new Date(previous.observed_at), 'new_observation_must_follow_current_record');
+  }
+  return { status: alreadyCurrent ? 'validated_existing_checkout_record' : 'validated_checkout_candidate', profile, code: cfg.code, event_key: p.event_key, observed_at: p.observed_at, package_sha256: digest(fs.readFileSync(absolute)), screenshot_sha256: p.original_screenshot.sha256, subtotal: p.subtotal, discount: p.discount, shipping: p.shipping, currency_fee_discount: p.currency_fee_discount, total: p.total, validated_at: new Date().toISOString() };
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
   const receipt = validateCheckoutPackage(process.argv[2], process.env.SITE_PROFILE);
