@@ -44,7 +44,7 @@ jobs:
           node --check scripts/publish-owner-update.mjs
           work=$(mktemp -d)
           mkdir -p "$work/public/api" "$work/public/$SITE_PROFILE" "$work/owner-uploads/test"
-          cp public/{index.html,sitemap.xml,static-route-map.json,deployment-manifest.json} "$work/public/"
+          cp public/{CNAME,index.html,sitemap.xml,static-route-map.json,deployment-manifest.json} "$work/public/"
           cp "public/$SITE_PROFILE/index.html" "$work/public/$SITE_PROFILE/"
           cp public/api/current-record.json "$work/public/api/"
           printf '%s' 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jJ3sAAAAASUVORK5CYII=' | base64 -d > "$work/owner-uploads/test/photo.png"
@@ -53,6 +53,10 @@ jobs:
           export GITHUB_ACTOR=harrysandhar01-web
           node "$GITHUB_WORKSPACE/scripts/publish-owner-update.mjs"
           node "$GITHUB_WORKSPACE/scripts/publish-owner-update.mjs"
+          sha256sum -c before.sha
+          mv public/api/current-record.json current-record.saved
+          node "$GITHUB_WORKSPACE/scripts/publish-owner-update.mjs"
+          mv current-record.saved public/api/current-record.json
           sha256sum -c before.sha
           grep -q 'not independently verified' public/owner-updates/index.html
           grep -q '&lt;script&gt;' public/owner-updates/index.html
