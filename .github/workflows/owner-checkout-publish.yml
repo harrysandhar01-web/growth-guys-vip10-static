@@ -26,8 +26,24 @@ concurrency:
   group: pages
   cancel-in-progress: false
 jobs:
+  authorize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Diagnose dispatch and enforce existing authorization
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref }}
+          CONFIRMED: ${{ inputs.owner_confirmed == true || (github.event_name == 'repository_dispatch' && github.event.client_payload.owner_confirmed == true) }}
+        run: |
+          set -euo pipefail
+          if [[ "$ACTOR" != "harrysandhar01-web" || "$REF" != "refs/heads/main" || "$CONFIRMED" != "true" ]]; then
+            echo "::error::Checkout publication not authorized: actor=$ACTOR ref=$REF owner_confirmed=$CONFIRMED event=$GITHUB_EVENT_NAME"
+            exit 1
+          fi
   publish:
-    if: github.actor == 'harrysandhar01-web' && github.ref == 'refs/heads/main' && (inputs.owner_confirmed == true || (github.event_name == 'repository_dispatch' && github.event.client_payload.owner_confirmed == true))
+    needs: authorize
     runs-on: ubuntu-latest
     timeout-minutes: 18
     environment:
