@@ -33,6 +33,9 @@ jobs:
         run: |
           node scripts/validate-canonical-snapshot.mjs public
           node scripts/validate-current-record-projection.mjs public
+      - name: Generate optional public history and evidence indexes
+        continue-on-error: true
+        run: node scripts/build-public-record-indexes.mjs
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
         with:
@@ -56,6 +59,9 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Confirm optional public history and evidence indexes
+        continue-on-error: true
+        run: node scripts/confirm-public-record-indexes.mjs
       - name: Independently confirm deployed current record and public surfaces
         env:
           SITE_CODE: VIP10
