@@ -138,6 +138,11 @@ jobs:
       - name: Deploy to actual GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+      - name: Confirm canonical routes and slash variants before publication receipt
+        env:
+          SITE_CODE: VIP10
+          SITE_ORIGIN: https://growthguysvip10.ca
+        run: node scripts/confirm-live-publication.mjs
       - name: Confirm public record
         env:
           RECORD: ${{ steps.owner.outputs.record_reference }}
