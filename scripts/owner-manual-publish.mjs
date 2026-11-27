@@ -78,7 +78,7 @@ const dateLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",mo
 const timeLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",year:"numeric",month:"long",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(candidates[0]);
 const url="/owner-records/"+id+"/";
 const record={
-  ...prev,
+  version:prev.version || "1.1", currency:"CAD", observation_type:"cart", published_at:new Date().toISOString(),
   code:cfg.code, record_reference:id,record_url:url,
   observed_at:observedAt, observed_timezone:"America/Toronto", status:"Verified cart-only observation",
   product_name:product,product,
