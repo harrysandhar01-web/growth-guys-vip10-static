@@ -13,8 +13,8 @@ const run = process.env.GITHUB_RUN_ID || '';
 if (!/^\d+$/.test(run) || !title || title.length > 160 || !body || body.length > 12000) fail('invalid_content_or_run');
 const root = path.resolve('public');
 const read = relative => fs.readFileSync(path.join(root,relative),'utf8');
-const record = JSON.parse(read('api/current-record.json'));
-if (record.code !== cfg) fail('wrong_site');
+// Ordinary owner content must not depend on the verification record being readable or current.
+if (read('CNAME').trim() !== new URL(origin).hostname) fail('wrong_site');
 const now = new Date().toISOString();
 const key = 'owner-' + run;
 const route = '/owner-updates/' + key + '/';
