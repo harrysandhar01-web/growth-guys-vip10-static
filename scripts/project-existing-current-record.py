@@ -212,9 +212,9 @@ class Projection:
         self.subtotal = self.amount('subtotal_cad')
         self.discount = self.amount('discount_cad')
         self.total = self.amount('total_cad')
-        self.method = record['method']
+        self.method = 'Checkout verification' if record['method'] == 'Automated laptop checkout verification' else record['method']
         self.status = record['status']
-        self.scope = record['scope']
+        self.scope = record['scope'].replace('Automated verification stopped at the checkout/payment screen.', 'Checked before payment.')
         self.benefit = f'VIP10 saved CAD {self.discount} (10%) on {self.product}.'
         self.breakdown = f'CAD {self.subtotal} item subtotal − CAD {self.discount} VIP10 code discount'
         if self.checkout:
@@ -346,11 +346,24 @@ class Projection:
             node.props['aria-label'] = 'VIP10 checkout discount evidence' if self.checkout else 'VIP10 documented cart result'
         if 'verified-at-checkout' in classes:
             node.props['href'] = self.record['record_url']
-            node.put(el('strong', self.status + ' · ' + self.method + ' · Dated record'),
+            node.put(el('strong', self.status + ' · Last verified'),
                      el('span', 'Observed: ' + self.date, className='verified-date'),
                      el('span', self.time, className='verified-timestamp'),
                      el('em', 'View record'))
             return node
+        if 'promo-proof-card' in classes:
+            for item in descendants(node):
+                if item.tag == 'div':
+                    label = next((plain(x) for x in item.children if isinstance(x, Element) and x.tag == 'dt'), '')
+                    for child in item.children:
+                        if isinstance(child, Element) and child.tag == 'dd':
+                            if label == 'Observed subtotal':
+                                child.put('CAD $' + self.subtotal)
+                            elif label == 'Observed discount':
+                                child.put('CAD $' + self.discount)
+        if node.props.get('href') and re.match(r'^View the (?:[A-Za-z]+ \\d{1,2}|latest) VIP10 record', plain(node)):
+            node.props['href'] = self.record['record_url']
+            node.put('View the latest VIP10 record →')
         if 'artifact-result-line' in classes:
             node.put(el('strong', self.status + ': '), self.benefit)
         if 'artifact-status' in classes:
