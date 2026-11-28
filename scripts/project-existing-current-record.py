@@ -220,10 +220,13 @@ class Projection:
         if self.checkout:
             # These are separate checkout fields, not a product-price substitution.
             self.shipping = self.amount('shipping_cad')
-            self.adjustment = self.amount('currency_fee_discount_cad')
-            self.charge = self.amount('charge_usd')
+            self.adjustment = self.amount('currency_fee_discount_cad', '0.00')
+            self.charge = self.amount('charge_usd') if record.get('charge_usd') is not None else None
             self.bitcoin = self.amount('bitcoin_adjustment_cad', '0.00')
-            self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total. Displayed charge: USD {self.charge}. Bitcoin adjustment: CAD {self.bitcoin}.'
+            if self.charge is None:
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate {record.get("payment_adjustment_label") or "payment-method"} discount = CAD {self.total} final checkout total. Payment method: {record.get("payment_method") or "not specified"}. Bitcoin adjustment: CAD {self.bitcoin}.'
+            else:
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total. Displayed charge: USD {self.charge}. Bitcoin adjustment: CAD {self.bitcoin}.'
             self.summary = f'VIP10: 10% off {self.product}, verified at checkout {self.date}. CAD {self.total} final total includes shipping and a separate adjustment.'
         else:
             self.breakdown += f'; CAD {self.total} displayed total. Separate Bitcoin adjustment: CAD {self.amount("bitcoin_adjustment_cad", "0.00")}.'
