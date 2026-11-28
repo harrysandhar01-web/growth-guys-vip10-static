@@ -213,7 +213,7 @@ class Projection:
         self.subtotal = self.amount('subtotal_cad')
         self.discount = self.amount('discount_cad')
         self.total = self.amount('total_cad')
-        self.method = 'Checkout verification' if record['method'] == 'Automated laptop checkout verification' else record['method']
+        self.method = 'Verified at checkout' if self.checkout else ('Checkout verification' if record['method'] == 'Automated laptop checkout verification' else record['method'])
         self.status = record['status']
         self.scope = record['scope'].replace('Automated verification stopped at the checkout/payment screen.', 'Checked before payment.')
         self.benefit = f'VIP10 saved CAD {self.discount} (10%) on {self.product}.'
