@@ -5,7 +5,7 @@ const root = resolve(process.argv[2] || 'public');
 const baseline = process.argv[3];
 const read = f => readFileSync(join(root, f), 'utf8');
 const record = JSON.parse(read('api/current-record.json'));
-const date = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Toronto', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(record.observed_at));
+const date = new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(record.observed_at));
 const pages = ['index.html', 'vip10/index.html', 'growth-guys-discount-code/index.html', 'does-vip10-work/index.html', 'how-we-verify/index.html', 'verification-archive/index.html'];
 const selectors = /current-record-refresh|verification-record-summary|current-verification-banner|search-evidence-module|verification-artifact|ledger-section/;
 function assert(ok, message) { if (!ok) throw new Error(message); }

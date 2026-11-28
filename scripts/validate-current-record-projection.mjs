@@ -11,9 +11,9 @@ if (existsSync(joinFile(ownerDir,"owner-publication-state.json"))) {
   const feed=j("verification-feed.json");
   const has=state.profile==="vip10" ? feed.records.some(x=>x.recordReference===state.latest) : feed.items.some(x=>x.id===state.latest);
   if (!has) throw Error("owner_record_absent_from_public_feed");
-  const displayDate=new Intl.DateTimeFormat("en-US",{timeZone:"America/Toronto",month:"long",day:"numeric",year:"numeric"}).format(new Date(record.observed_at));
-  // Customer-facing publication dates follow the accepted record's Toronto
-  // observation date, not the UTC calendar date embedded in the owner key.
+  const displayDate=new Intl.DateTimeFormat("en-US",{timeZone:"UTC",month:"long",day:"numeric",year:"numeric"}).format(new Date(record.observed_at));
+  // Customer-facing current-record labels use the accepted observation's
+  // calendar date while preserving the exact UTC timestamp in machine data.
   const publicationDate=displayDate;
   for (const file of ["index.html",cfg.route+"/index.html","verification-archive/index.html"]) {
     const html=readFileSync(joinFile(ownerDir,file),"utf8");
