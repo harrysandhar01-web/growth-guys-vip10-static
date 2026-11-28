@@ -205,8 +205,9 @@ class Projection:
         assert record['code'] == 'VIP10' and state['latest'] == record['record_reference']
         self.record, self.state, self.relative = record, state, relative
         self.checkout = record.get('observation_type') == 'checkout' or record['status'] == 'Verified at checkout'
-        self.observed = datetime.fromisoformat(record['observed_at'].replace('Z', '+00:00')).astimezone(ZoneInfo('America/Toronto'))
-        self.date = f'{self.observed:%B} {self.observed.day}, {self.observed.year}'
+        observed_utc = datetime.fromisoformat(record['observed_at'].replace('Z', '+00:00'))
+        self.observed = observed_utc.astimezone(ZoneInfo('America/Toronto'))
+        self.date = f'{observed_utc:%B} {observed_utc.day}, {observed_utc.year}'
         self.time = f"{self.date} at {self.observed.hour % 12 or 12}:{self.observed.minute:02d}:{self.observed.second:02d} {'a.m.' if self.observed.hour < 12 else 'p.m.'} {self.observed:%Z}"
         self.product = record['product_name']
         self.subtotal = self.amount('subtotal_cad')
@@ -224,12 +225,12 @@ class Projection:
             self.charge = self.amount('charge_usd') if record.get('charge_usd') is not None else None
             self.bitcoin = self.amount('bitcoin_adjustment_cad', '0.00')
             if self.charge is None:
-                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate {record.get("payment_adjustment_label") or "payment-method"} discount = CAD {self.total} final checkout total. Payment method: {record.get("payment_method") or "not specified"}. Bitcoin discount: CAD {self.bitcoin}.'
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate {record.get("payment_adjustment_label") or "payment-method"} discount = CAD {self.total} final checkout total. Payment method: {record.get("payment_method") or "not specified"}.'
             else:
-                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total Bitcoin discount: CAD {self.bitcoin}.'
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total.'
             self.summary = f'VIP10: 10% off {self.product}, verified at checkout {self.date}. CAD {self.total} final total includes shipping and a separate adjustment.'
         else:
-            self.breakdown += f'; CAD {self.total} displayed total. Separate Bitcoin discount: CAD {self.amount("bitcoin_adjustment_cad", "0.00")}.'
+            self.breakdown += f'; CAD {self.total} displayed total.'
             self.summary = f'VIP10: 10% off {self.product}, cart observed {self.date}. CAD {self.total} displayed total; see the separate adjustment and evidence.'
         self.title = ''
         self.answers = {
@@ -407,10 +408,7 @@ class Projection:
             node.put(el('p', el('strong', self.status + ' · ' + self.method)),
                      el('p', self.benefit + ' Observed ' + self.time + '. ' + self.breakdown + ' ' + self.scope))
         if 'btc-savings-notice' in classes and self.checkout:
-            node.props['aria-label'] = 'Current VIP10 checkout adjustments'
-            node.put(el('span', 'Checkout adjustments', className='btc-savings-notice__label'),
-                     el('strong', 'Bitcoin discount in this observed checkout: CAD ' + self.bitcoin + '.'),
-                     el('p', 'The 10% VIP10 code discount is separate from shipping and the CAD ' + self.adjustment + ' currency-fee adjustment. No Bitcoin savings are attributed to this run.'))
+            node.put()
         if 'btc-savings-notice__label' in classes and self.checkout:
             node.put('Checkout adjustments')
         if 'ledger-copy' in classes:

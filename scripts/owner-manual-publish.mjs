@@ -95,7 +95,7 @@ const record={
   observed_total:dollars(total),total_cad:dollars(total),
   evidence_url:evidence,
   source_record_reference:oldRef,
-  method:checkout?"Authenticated owner-reviewed checkout evidence":"Verified cart-only evidence",
+  method:checkout?"Verified at checkout":"Verified cart-only evidence",
   payment_method_selected:checkout,
   payment_method: checkout ? (process.env.PAYMENT_METHOD || "") : null,
   shipping_cad:dollars(shipping),
