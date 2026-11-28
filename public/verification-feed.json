@@ -877,6 +877,21 @@
       "shipping": "20.00",
       "currencyFeeDiscount": "1.24",
       "evidenceUrl": "/evidence/2026-11-26-vip10-laptop-checkout/vip10-final-checkout-original.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261127204409-46104179238",
+      "recordUrl": "/owner-records/vip10-owner-20261127204409-46104179238/",
+      "checkedAt": "2026-11-27T20:44:09.815Z",
+      "status": "accepted",
+      "recordType": "Verified at checkout",
+      "productName": "Retatrutide 10mg - Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "6.40",
+      "bitcoinAdjustment": "0.00",
+      "cartSubtotal": "64.00",
+      "displayedTotal": "71.84",
+      "evidenceUrl": "/evidence/2026-11-27-vip10-laptop-checkout/vip10-final-checkout-original.webp"
     }
   ],
   "health": {

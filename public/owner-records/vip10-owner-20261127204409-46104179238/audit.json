@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "profile": "vip10",
+  "code": "VIP10",
+  "mode": "new",
+  "observationScope": "checkout-payment-screen",
+  "recordReference": "vip10-owner-20261127204409-46104179238",
+  "sourceRecordReference": "vip10-owner-20261126064107-45774662911",
+  "previousObservedAt": "2026-11-26T06:41:07.155Z",
+  "observedAt": "2026-11-27T20:44:09.815Z",
+  "owner": "harrysandhar01-web",
+  "reason": "Publish the genuine retained November 27 VIP10 Interac checkout observation without repeating checkout.",
+  "originalEvidence": "/evidence/2026-11-27-vip10-laptop-checkout/vip10-final-checkout-original.webp",
+  "bitcoinAdjustmentCad": "0.00",
+  "timestampUncertainty": "Exact UTC capture timestamp retained from the original laptop observation receipt; timestamp is not embedded in the screenshot.",
+  "publishedByRun": "46104179238",
+  "submittedAt": "2026-11-28T03:43:34.714Z"
+}

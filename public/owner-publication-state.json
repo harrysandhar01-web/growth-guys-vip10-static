@@ -1,11 +1,9 @@
 {
-  "latest": "vip10-owner-20261126064107-45774662911",
+  "latest": "vip10-owner-20261127204409-46104179238",
   "profile": "vip10",
   "code": "VIP10",
-  "observedAt": "2026-11-26T06:41:07.155Z",
-  "submittedAt": "2026-11-26T07:21:19.901Z",
+  "observedAt": "2026-11-27T20:44:09.815Z",
+  "submittedAt": "2026-11-28T03:43:34.714Z",
   "mode": "new",
-  "previousReference": "vip10-owner-20261123052000-45119874256",
-  "evidenceEventKey": "vip10-2026-11-26-laptop-1795675267155",
-  "publicationPhase": "owner_accepted"
+  "previousReference": "vip10-owner-20261126064107-45774662911"
 }

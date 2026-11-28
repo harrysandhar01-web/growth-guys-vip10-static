@@ -1,0 +1,40 @@
+{
+  "version": "1.1",
+  "currency": "CAD",
+  "observation_type": "checkout",
+  "published_at": "2026-11-28T03:43:34.714Z",
+  "code": "VIP10",
+  "record_reference": "vip10-owner-20261127204409-46104179238",
+  "record_url": "/owner-records/vip10-owner-20261127204409-46104179238/",
+  "observed_at": "2026-11-27T20:44:09.815Z",
+  "observed_timezone": "America/Toronto",
+  "status": "Verified at checkout",
+  "product_name": "Retatrutide 10mg - Single vial",
+  "product": "Retatrutide 10mg - Single vial",
+  "cart_subtotal": "64.00",
+  "subtotal_cad": "64.00",
+  "discount_amount": "6.40",
+  "discount_cad": "6.40",
+  "observed_total": "71.84",
+  "total_cad": "71.84",
+  "evidence_url": "/evidence/2026-11-27-vip10-laptop-checkout/vip10-final-checkout-original.webp",
+  "source_record_reference": "vip10-owner-20261126064107-45774662911",
+  "method": "Authenticated owner-reviewed checkout evidence",
+  "payment_method_selected": true,
+  "payment_method": "Interac e-Transfer",
+  "shipping_cad": "20.00",
+  "currency_fee_discount_cad": "5.76",
+  "payment_adjustment_label": "Interac e-Transfer discount",
+  "bitcoin_adjustment_cad": "0.00",
+  "timestamp_precision": "milliseconds",
+  "timestamp_uncertainty": "Exact UTC capture timestamp retained from the original laptop observation receipt; timestamp is not embedded in the screenshot.",
+  "scope": "Checkout/payment screen observation stopped before payment. No personal, contact, identity, address or payment details were entered, and no order or payment was submitted.",
+  "product_url": "https://growthguys.com/shop/retatrutide/",
+  "line_items": [
+    {
+      "name": "Retatrutide 10mg - Single vial",
+      "quantity": 1,
+      "price_cad": "64.00"
+    }
+  ]
+}
