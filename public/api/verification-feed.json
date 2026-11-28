@@ -892,6 +892,21 @@
       "cartSubtotal": "64.00",
       "displayedTotal": "71.84",
       "evidenceUrl": "/evidence/2026-11-27-vip10-laptop-checkout/vip10-final-checkout-original.webp"
+    },
+    {
+      "recordReference": "vip10-owner-20261128041317-46106857653",
+      "recordUrl": "/owner-records/vip10-owner-20261128041317-46106857653/",
+      "checkedAt": "2026-11-28T04:13:17.022Z",
+      "status": "accepted",
+      "recordType": "Verified at checkout",
+      "productName": "Tirzepatide 10mg - Single vial",
+      "currency": "CAD",
+      "code": "VIP10",
+      "discountAmount": "4.00",
+      "bitcoinAdjustment": "0.00",
+      "cartSubtotal": "40.00",
+      "displayedTotal": "52.40",
+      "evidenceUrl": "/evidence/2026-11-28-vip10-laptop-checkout/vip10-final-checkout-original.webp"
     }
   ],
   "health": {
