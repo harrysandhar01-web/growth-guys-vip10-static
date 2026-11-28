@@ -226,7 +226,7 @@ class Projection:
             if self.charge is None:
                 self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate {record.get("payment_adjustment_label") or "payment-method"} discount = CAD {self.total} final checkout total. Payment method: {record.get("payment_method") or "not specified"}. Bitcoin discount: CAD {self.bitcoin}.'
             else:
-                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total. Displayed charge: USD {self.charge}. Bitcoin discount: CAD {self.bitcoin}.'
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total Bitcoin discount: CAD {self.bitcoin}.'
             self.summary = f'VIP10: 10% off {self.product}, verified at checkout {self.date}. CAD {self.total} final total includes shipping and a separate adjustment.'
         else:
             self.breakdown += f'; CAD {self.total} displayed total. Separate Bitcoin discount: CAD {self.amount("bitcoin_adjustment_cad", "0.00")}.'
