@@ -422,7 +422,10 @@ class Projection:
         if 'ledger-paper' in parent_classes and node.tag == 'i':
             node.put('VIP10 item discount')
         if 'hero-content' in parent_classes and node.tag == 'h1':
-            node.put('Growth Guys VIP10 — 10% item discount verified at checkout' if self.checkout else 'Growth Guys VIP10 — dated cart discount evidence')
+            if self.relative == 'index.html' and self.checkout:
+                node.put('Growth Guys Promo Code VIP10 — 10% Off, Verified Daily at Checkout')
+            else:
+                node.put('Growth Guys VIP10 — 10% item discount verified at checkout' if self.checkout else 'Growth Guys VIP10 — dated cart discount evidence')
         if 'hero-deck' in classes:
             node.put(self.benefit + ' ' + self.status + ' on ' + self.date + '; the final total includes separate checkout charges and adjustments.' if self.checkout else self.benefit + ' ' + self.scope)
         if 'hero-trust' in parent_classes and plain(node) == 'Cart event logged':
