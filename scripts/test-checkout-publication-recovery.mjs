@@ -10,6 +10,7 @@ const archiveId = 'vip10-owner-20261126064107-45774662911';
 const fixture = path.join(root, 'public/evidence/2026-11-26-' + profile + '-laptop-checkout/checkout-package.json');
 const pkg = JSON.parse(fs.readFileSync(fixture, 'utf8'));
 const previous = path.join(root, 'public/owner-records', pkg.previous_record_reference, 'record.json');
+const previousRecord = JSON.parse(fs.readFileSync(previous, 'utf8'));
 const accepted = path.join(root, 'public/owner-records', archiveId, 'record.json');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), profile + '-checkout-regression-'));
 try {
@@ -19,6 +20,18 @@ try {
   process.chdir(tmp);
   fs.copyFileSync(previous, 'public/api/current-record.json');
   assert.equal(validateCheckoutPackage(copy, profile).status, 'validated_checkout_candidate');
+  // A package can carry a stale lineage hint after another accepted publication.
+  // Validation must bind to the authoritative current record without changing
+  // the genuine observation timestamp or evidence bytes.
+  const staleLineage = structuredClone(pkg);
+  staleLineage.previous_record_reference = 'stale-reference-from-package';
+  fs.writeFileSync(copy, JSON.stringify(staleLineage));
+  const reconciled = validateCheckoutPackage(copy, profile);
+  assert.equal(reconciled.status, 'validated_checkout_candidate');
+  assert.equal(reconciled.authoritative_previous_record_reference, previousRecord.record_reference);
+  assert.equal(reconciled.lineage_reconciled, true);
+  assert.equal(staleLineage.observed_at, pkg.observed_at);
+  fs.copyFileSync(fixture, copy);
   if (profile === 'growth10') {
     const independent = structuredClone(pkg);
     independent.code_application = { ...independent.code_application, session_mode:'independent',
