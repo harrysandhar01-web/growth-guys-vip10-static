@@ -18,7 +18,9 @@ on:
         default: false
         description: Authorize public posting; no private information included
   push:
+    branches: [main]
     paths:
+      - 'operations/owner-content-request.json'
       - 'scripts/publish-owner-update.mjs'
       - '.github/workflows/owner-content-publish.yml'
 permissions:
@@ -64,7 +66,7 @@ jobs:
           node -e 'const fs=require("fs"),s=JSON.parse(fs.readFileSync("public/owner-updates/index.json"));if(s.updates.length!==1||s.updates[0].verification_status!=="not_independently_verified")process.exit(1)'
           cmp owner-uploads/test/photo.png "public/owner-updates/owner-$GITHUB_RUN_ID/submitted-image.png"
   publish:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.actor == 'harrysandhar01-web' && inputs.owner_confirmed == true
+    if: github.ref == 'refs/heads/main' && github.actor == 'harrysandhar01-web' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.owner_confirmed == true))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -84,7 +86,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Resolve owner content request from authenticated push
+        if: github.event_name == 'push'
+        id: request
+        env:
+          REQUEST_COMMIT: ${{ github.sha }}
+          BEFORE_COMMIT: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$REQUEST_COMMIT" "$BEFORE_COMMIT"
+          if ! git diff --name-only "$BEFORE_COMMIT" "$REQUEST_COMMIT" | grep -Fxq operations/owner-content-request.json; then
+            echo 'requested=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git show "$REQUEST_COMMIT:operations/owner-content-request.json" > "$RUNNER_TEMP/owner-content-request.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/owner-content-request.json','utf8'));
+          if(r.site!=='VIP10'||r.owner_confirmed!==true||typeof r.title!=='string'||typeof r.text!=='string'||(r.image_path!=null&&typeof r.image_path!=='string'))throw Error('Invalid authenticated owner content request');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,'requested=true\n');
+          NODE
       - name: Stage owner content without verification approval
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
         env:
           SITE_PROFILE: vip10
           OWNER_CONFIRMED: ${{ inputs.owner_confirmed }}
@@ -93,7 +116,16 @@ jobs:
           UPDATE_IMAGE: ${{ inputs.image_path }}
         run: |
           set -euo pipefail
-          node scripts/publish-owner-update.mjs
+          if [[ "$GITHUB_EVENT_NAME" == push ]]; then
+            node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/owner-content-request.json','utf8'));
+          execFileSync('node',['scripts/publish-owner-update.mjs'],{stdio:'inherit',env:{...process.env,OWNER_CONFIRMED:'true',UPDATE_TITLE:r.title,UPDATE_TEXT:r.text,UPDATE_IMAGE:r.image_path||''}});
+          NODE
+          else
+            node scripts/publish-owner-update.mjs
+          fi
           git diff --exit-code -- public/api public/owner-records public/owner-publication-state.json public/verification-feed.json public/verification-archive public/evidence
           git add public/owner-updates public/index.html "public/$SITE_PROFILE/index.html" public/sitemap.xml public/static-route-map.json public/deployment-manifest.json
           git config user.name "Owner Content Publisher"
@@ -103,18 +135,24 @@ jobs:
             git push origin HEAD:main
           fi
       - uses: actions/configure-pages@v5
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
       - name: Generate optional derived public indexes
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
         continue-on-error: true
         run: node scripts/build-public-record-indexes.mjs
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
         with:
           path: ./public
       - uses: actions/deploy-pages@v4
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
         id: deploy
       - name: Confirm optional public index availability
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
         continue-on-error: true
         run: node scripts/confirm-public-record-indexes.mjs
       - name: Confirm owner update and image live
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
         env:
           SITE_ORIGIN: https://growthguysvip10.ca
         run: |
@@ -144,7 +182,9 @@ jobs:
           throw error;
           NODE
 
-      - name: Confirm all declared slash variants and current API aliases after manual update
+      - name: Check verification aliases separately after ordinary owner publication
+        if: github.event_name == 'workflow_dispatch' || steps.request.outputs.requested == 'true'
+        continue-on-error: true
         env:
           SITE_CODE: VIP10
           SITE_ORIGIN: https://growthguysvip10.ca
