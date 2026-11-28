@@ -1,0 +1,3 @@
+# Editorial publication lane
+
+Owner-authorized editorials, features, guides and corrections are ordinary static HTML content. They do not require a checkout run, checkout acceptance, evidence validator or an updated verification record. Use accurate source attribution, distinguish calculations from actual observations, and keep evidence, verification APIs, record dates and other sites unchanged. Link editorial pages from the homepage and editorial index, include their canonical URLs in the sitemap, and independently read back the published pages. Do not rewrite editorial dates as verification timestamps.
