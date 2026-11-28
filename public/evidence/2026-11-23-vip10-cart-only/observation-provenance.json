@@ -18,7 +18,7 @@
   "shipping": "Calculated at checkout",
   "payment_method_changed": false,
   "status": "Unaccepted private cart observation; not published",
-  "notes": "Bitcoin adjustment was visible in the pre-existing cart state; no payment option was selected or changed. The exact code was entered and applied in this site-specific observation. No checkout, identity, address, payment details, order submission or purchase.",
+  "notes": "Bitcoin discount was visible in the pre-existing cart state; no payment option was selected or changed. The exact code was entered and applied in this site-specific observation. No checkout, identity, address, payment details, order submission or purchase.",
   "sha256": {
     "live-current-record-readback.json": "8a3076429c394bc4dba988a9c483d5f6dbc54626613f942233bb1b940f9d7238",
     "preexisting-cart-original.webp": "0e4a446525b07d5a5a9228d92fad3cb6e5322885d49a4180706857fefce99be0",

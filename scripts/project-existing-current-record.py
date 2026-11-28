@@ -224,12 +224,12 @@ class Projection:
             self.charge = self.amount('charge_usd') if record.get('charge_usd') is not None else None
             self.bitcoin = self.amount('bitcoin_adjustment_cad', '0.00')
             if self.charge is None:
-                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate {record.get("payment_adjustment_label") or "payment-method"} discount = CAD {self.total} final checkout total. Payment method: {record.get("payment_method") or "not specified"}. Bitcoin adjustment: CAD {self.bitcoin}.'
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate {record.get("payment_adjustment_label") or "payment-method"} discount = CAD {self.total} final checkout total. Payment method: {record.get("payment_method") or "not specified"}. Bitcoin discount: CAD {self.bitcoin}.'
             else:
-                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total. Displayed charge: USD {self.charge}. Bitcoin adjustment: CAD {self.bitcoin}.'
+                self.breakdown += f' + CAD {self.shipping} shipping − CAD {self.adjustment} separate currency-fee adjustment = CAD {self.total} final checkout total. Displayed charge: USD {self.charge}. Bitcoin discount: CAD {self.bitcoin}.'
             self.summary = f'VIP10: 10% off {self.product}, verified at checkout {self.date}. CAD {self.total} final total includes shipping and a separate adjustment.'
         else:
-            self.breakdown += f'; CAD {self.total} displayed total. Separate Bitcoin adjustment: CAD {self.amount("bitcoin_adjustment_cad", "0.00")}.'
+            self.breakdown += f'; CAD {self.total} displayed total. Separate Bitcoin discount: CAD {self.amount("bitcoin_adjustment_cad", "0.00")}.'
             self.summary = f'VIP10: 10% off {self.product}, cart observed {self.date}. CAD {self.total} displayed total; see the separate adjustment and evidence.'
         self.title = ''
         self.answers = {
@@ -409,7 +409,7 @@ class Projection:
         if 'btc-savings-notice' in classes and self.checkout:
             node.props['aria-label'] = 'Current VIP10 checkout adjustments'
             node.put(el('span', 'Checkout adjustments', className='btc-savings-notice__label'),
-                     el('strong', 'Bitcoin adjustment in this observed checkout: CAD ' + self.bitcoin + '.'),
+                     el('strong', 'Bitcoin discount in this observed checkout: CAD ' + self.bitcoin + '.'),
                      el('p', 'The 10% VIP10 code discount is separate from shipping and the CAD ' + self.adjustment + ' currency-fee adjustment. No Bitcoin savings are attributed to this run.'))
         if 'btc-savings-notice__label' in classes and self.checkout:
             node.put('Checkout adjustments')
@@ -525,7 +525,7 @@ class Projection:
             # Correct the visible prefix, but do not invent missing React rows.
             result = result.replace('"aria-label":"VIP10 Bitcoin savings notice"', '"aria-label":"Current VIP10 checkout adjustments"')
             result = re.sub(r'("children":")Pay with Bitcoin for 20% off$',
-                            lambda m: m[1] + 'Bitcoin adjustment in this observed checkout: CAD ' + self.bitcoin + '.', result)
+                            lambda m: m[1] + 'Bitcoin discount in this observed checkout: CAD ' + self.bitcoin + '.', result)
         return result
 
     def flight(self, text):

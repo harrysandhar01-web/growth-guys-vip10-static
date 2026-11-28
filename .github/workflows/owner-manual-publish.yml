@@ -58,7 +58,7 @@ on:
       bitcoin_adjustment:
         type: string
         required: true
-        description: "Separately displayed Bitcoin adjustment in CAD; use 0.00 when none"
+        description: "Separately displayed Bitcoin discount in CAD; use 0.00 when none"
       timestamp_uncertainty:
         type: string
         required: true
