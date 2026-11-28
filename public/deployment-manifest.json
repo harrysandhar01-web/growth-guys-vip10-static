@@ -214,12 +214,13 @@
     "/vip10/": "/vip10/index.html",
     "/owner-records/vip10-owner-20261126064107-45774662911/": "/owner-records/vip10-owner-20261126064107-45774662911/index.html",
     "/owner-updates/": "/owner-updates/index.html",
-    "/owner-updates/owner-46102206116/": "/owner-updates/owner-46102206116/index.html"
+    "/owner-updates/owner-46102206116/": "/owner-updates/owner-46102206116/index.html",
+    "/editorials/black-friday-2026-cart-discount-analysis/": "/editorials/black-friday-2026-cart-discount-analysis/index.html"
   },
   "deploymentState": "built_not_deployed",
   "canonicalSnapshot": {
     "generatedAt": "2026-10-19T16:29:50.000Z",
-    "publicRouteCount": 240,
+    "publicRouteCount": 241,
     "nextAssetCount": 125,
     "publicHostedAssetCount": 3,
     "currentRecordEventKey": "vip10-observed-20261019-161519",
