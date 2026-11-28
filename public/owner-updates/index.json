@@ -1,0 +1,16 @@
+{
+  "site": "VIP10",
+  "updates": [
+    {
+      "id": "owner-46102206116",
+      "title": "November 27 VIP10 Interac checkout evidence",
+      "body": "Owner-submitted evidence update — not an independently verified current-record replacement. The retained November 27, 2026 checkout observation from Harry’s connected laptop / My Browser showed VIP10 visibly applied as vip10 to one Retatrutide 10mg single vial. The merchant display showed a CAD 64.00 Black Friday sale subtotal, a CAD 6.40 VIP10 discount, CAD 20.00 shipping, a separate CAD 5.76 Interac e-Transfer discount, and a final displayed total of CAD 71.84. The observed capture timestamp is 2026-11-27T20:44:09.815Z (America/Toronto equivalent provenance). No personal, contact, identity, address, payment details, order submission, or payment submission occurred. This owner-submitted evidence does not advance or replace the existing independently verified VIP10 current-record date; it is provided for transparent public reference pending the supported verified-record publisher’s Interac schema update.",
+      "published_at": "2026-11-28T03:19:08.474Z",
+      "route": "/owner-updates/owner-46102206116/",
+      "source": "owner_submitted",
+      "verification_status": "not_independently_verified",
+      "image_url": "/owner-updates/owner-46102206116/submitted-image.webp",
+      "image_sha256": "89cbe925fd6614c9893fbe71a34f0dbf4875a0c3b340b831a1fde19a89f1a1d6"
+    }
+  ]
+}
