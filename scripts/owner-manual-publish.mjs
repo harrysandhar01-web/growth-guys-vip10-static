@@ -14,7 +14,8 @@ if (process.env.GITHUB_ACTOR !== "harrysandhar01-web" || process.env.OWNER_CONFI
 const mode = process.env.PUBLICATION_MODE;
 if (!["new","correction"].includes(mode)) throw new Error("invalid_publication_mode");
 const scope = (process.env.OBSERVATION_SCOPE || "").trim();
-if (scope !== "cart-only") throw new Error("observation_scope_must_be_cart_only");
+if (!["cart-only","checkout-payment-screen"].includes(scope)) throw new Error("invalid_observation_scope");
+const checkout = scope === "checkout-payment-screen";
 const reason = (process.env.OWNER_REASON || "").trim();
 if (reason.length < 8 || reason.length > 700) throw new Error("owner_reason_required");
 const eastern = String(process.env.OBSERVED_EASTERN || "").trim();
@@ -28,8 +29,11 @@ const candidates = [4,5].map(offset=>new Date(Date.UTC(year,month-1,day,hour+off
   return +o.year===year && +o.month===month && +o.day===day && +o.hour===hour && +o.minute===minute;
 });
 if (candidates.length!==1) throw new Error("Eastern_time_ambiguous_or_invalid_choose_an_unambiguous_time");
-const observedAt = candidates[0].toISOString();
-if (candidates[0].getTime()>Date.now()+300000) throw new Error("future_evidence_time_not_allowed");
+const exactIso = String(process.env.OBSERVED_ISO || "").trim();
+const exactDate = exactIso ? new Date(exactIso) : candidates[0];
+if (exactIso && (!Number.isFinite(exactDate.getTime()) || exactDate.toISOString() !== exactIso)) throw new Error("observed_iso_must_be_exact_iso8601");
+const observedAt = exactDate.toISOString();
+if (exactDate.getTime()>Date.now()+300000) throw new Error("future_evidence_time_not_allowed");
 const pub = path.resolve("public");
 const p=(f)=>path.join(pub,f);
 const read=(f)=>fs.readFileSync(p(f),"utf8");
@@ -57,8 +61,12 @@ const subtotal=toCents(process.env.CART_SUBTOTAL || (mode==="correction"?existin
 const discount=toCents(process.env.DISCOUNT_AMOUNT || (mode==="correction"?existingDiscount:""),"discount");
 const total=toCents(process.env.DISPLAYED_TOTAL || (mode==="correction"?existingTotal:""),"total");
 const bitcoin=toCents(process.env.BITCOIN_ADJUSTMENT || "0","bitcoin_adjustment");
+const shipping=toCents(process.env.DISPLAYED_SHIPPING || "0","displayed_shipping");
+const paymentAdjustment=toCents(process.env.PAYMENT_ADJUSTMENT || "0","payment_adjustment");
 if (subtotal<=0 || discount<=0 || discount>subtotal) throw new Error("positive_discount_within_subtotal_required");
-if (bitcoin<0 || total<0 || subtotal-discount-bitcoin!==total) throw new Error("cart_total_must_preserve_separate_bitcoin_adjustment");
+if (bitcoin<0 || shipping<0 || paymentAdjustment<0 || total<0) throw new Error("invalid_total_components");
+const reconciledTotal = subtotal-discount+shipping-bitcoin-paymentAdjustment;
+if (reconciledTotal!==total) throw new Error("checkout_total_components_do_not_reconcile");
 const timestampUncertainty=(process.env.TIMESTAMP_UNCERTAINTY || "").trim();
 if (!timestampUncertainty) throw new Error("timestamp_uncertainty_required");
 const timestampPrecision=(process.env.TIMESTAMP_PRECISION || "").trim();
@@ -78,21 +86,25 @@ const dateLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",mo
 const timeLabel = new Intl.DateTimeFormat("en-CA",{timeZone:"America/Toronto",year:"numeric",month:"long",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}).format(candidates[0]);
 const url="/owner-records/"+id+"/";
 const record={
-  version:prev.version || "1.1", currency:"CAD", observation_type:"cart", published_at:new Date().toISOString(),
+  version:prev.version || "1.1", currency:"CAD", observation_type:checkout?"checkout":"cart", published_at:new Date().toISOString(),
   code:cfg.code, record_reference:id,record_url:url,
-  observed_at:observedAt, observed_timezone:"America/Toronto", status:"Verified cart-only observation",
+  observed_at:observedAt, observed_timezone:"America/Toronto", status:checkout?"Verified at checkout":"Verified cart-only observation",
   product_name:product,product,
   cart_subtotal:dollars(subtotal), subtotal_cad:dollars(subtotal),
   discount_amount:dollars(discount),discount_cad:dollars(discount),
   observed_total:dollars(total),total_cad:dollars(total),
   evidence_url:evidence,
   source_record_reference:oldRef,
-  method:"Verified cart-only evidence",
-  payment_method_selected:false,
+  method:checkout?"Authenticated owner-reviewed checkout evidence":"Verified cart-only evidence",
+  payment_method_selected:checkout,
+  payment_method: checkout ? (process.env.PAYMENT_METHOD || "") : null,
+  shipping_cad:dollars(shipping),
+  currency_fee_discount_cad:dollars(paymentAdjustment),
+  payment_adjustment_label: checkout ? (process.env.PAYMENT_ADJUSTMENT_LABEL || "") : null,
   bitcoin_adjustment_cad:dollars(bitcoin),
   timestamp_precision:timestampPrecision,
   timestamp_uncertainty:timestampUncertainty,
-  scope:"Documented pre-payment cart observation; no checkout, identity, address, payment details, order submission or purchase was used."
+  scope:checkout?"Checkout/payment screen observation stopped before payment. No personal, contact, identity, address or payment details were entered, and no order or payment was submitted.":"Documented pre-payment cart observation; no checkout, identity, address, payment details, order submission or purchase was used."
 };
 // Never inherit product metadata from the previous record. These fields are
 // published only when explicitly supplied for this exact cart event.
@@ -106,7 +118,7 @@ if (explicitLineItems) {
 const now=new Date().toISOString();
 const audit={schemaVersion:1,profile,code:cfg.code,mode,observationScope:scope,recordReference:id,sourceRecordReference:oldRef,previousObservedAt:prev.observed_at,observedAt,owner:"harrysandhar01-web",reason,originalEvidence:evidence,bitcoinAdjustmentCad:dollars(bitcoin),timestampUncertainty, publishedByRun:process.env.GITHUB_RUN_ID||null,submittedAt:now};
 const badge = "<!-- OWNER_RECORD_START --><section aria-label=\"Current verified cart-only record\" data-owner-current-record=\""+id+"\" style=\"margin:12px auto;padding:16px;max-width:1200px;background:#f0f8ed;color:#16391c;border:3px solid #248044;font:16px/1.5 Arial,sans-serif;position:relative;z-index:10\"><strong>Latest verified "+escapeHtml(cfg.code)+" cart observation — "+escapeHtml(dateLabel)+"</strong><p style=\"margin:5px 0\">Cart observed "+escapeHtml(timeLabel)+" · "+escapeHtml(product)+" · CAD "+dollars(subtotal)+" subtotal · CAD "+dollars(discount)+" code discount · CAD "+dollars(bitcoin)+" separate Bitcoin adjustment · CAD "+dollars(total)+" displayed total.</p><p style=\"margin:5px 0\">"+(mode==="correction"?"Correction to a previously documented cart event.":"Documented new cart event.")+" No checkout, payment, identity, address, order submission or purchase was used. <a href=\""+url+"\">View record and evidence</a>.</p></section><!-- OWNER_RECORD_END -->";
-const summary = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+cfg.code+" verified cart-only record — "+dateLabel+"</title><link rel=\"canonical\" href=\"https://"+cfg.domain+url+"\"></head><body style=\"font:18px/1.6 Arial,sans-serif;max-width:820px;margin:auto;padding:20px\"><p><a href=\"/\">Home</a></p><h1>"+cfg.code+" documented cart-only record</h1><p><strong>Observed:</strong> "+escapeHtml(timeLabel)+"</p><p><strong>Product:</strong> "+escapeHtml(product)+"</p><p><strong>Subtotal:</strong> CAD "+dollars(subtotal)+"</p><p><strong>Code discount:</strong> CAD "+dollars(discount)+"</p><p><strong>Separate Bitcoin adjustment:</strong> CAD "+dollars(bitcoin)+"</p><p><strong>Displayed total:</strong> CAD "+dollars(total)+"</p><p><strong>Source evidence:</strong> <a href=\""+escapeHtml(evidence)+"\">View evidence</a></p><p><strong>Record type:</strong> "+(mode==="correction"?"Verified cart-only correction of documented observation":"Verified cart-only dated observation")+"</p><p>This reports a pre-payment cart observation. The timestamp is retained from the provenance record and is not visibly embedded in the screenshot. No checkout, payment, identity, address, order submission or purchase was used.</p></body></html>";
+const summary = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"+cfg.code+" verified record — "+dateLabel+"</title><link rel=\"canonical\" href=\"https://"+cfg.domain+url+"\"></head><body style=\"font:18px/1.6 Arial,sans-serif;max-width:820px;margin:auto;padding:20px\"><p><a href=\"/\">Home</a></p><h1>"+cfg.code+" documented cart-only record</h1><p><strong>Observed:</strong> "+escapeHtml(timeLabel)+"</p><p><strong>Product:</strong> "+escapeHtml(product)+"</p><p><strong>Subtotal:</strong> CAD "+dollars(subtotal)+"</p><p><strong>Code discount:</strong> CAD "+dollars(discount)+"</p><p><strong>Shipping:</strong> CAD "+dollars(shipping)+"</p><p><strong>Separate payment-method discount:</strong> CAD "+dollars(paymentAdjustment)+"</p><p><strong>Displayed total:</strong> CAD "+dollars(total)+"</p><p><strong>Source evidence:</strong> <a href=\""+escapeHtml(evidence)+"\">View evidence</a></p><p><strong>Record type:</strong> "+(checkout?"Verified at checkout":"Verified cart-only observation")+"</p><p>This reports a genuine pre-payment checkout observation. The timestamp is retained from the original evidence receipt. No personal, contact, identity, address or payment details were entered, and no order or payment was submitted.</p></body></html>";
 // Stage every file in memory first; invalid input must cause no partial writes.
 const out=new Map();
 const put=(f,v)=>out.set(f,typeof v==="string"?v:JSON.stringify(v,null,2)+"\n");
@@ -119,7 +131,7 @@ put("owner-records/current.json",record);
 const feed=readJson("verification-feed.json");
 if (profile==="vip10"){
   if(!Array.isArray(feed.records)) throw Error("vip10_feed_schema_changed");
-  feed.records.push({recordReference:id,recordUrl:url,checkedAt:observedAt,status:"accepted",recordType:mode==="correction"?"Verified cart-only correction":"Documented cart-only result",productName:product,currency:"CAD",code:cfg.code,discountAmount:dollars(discount),bitcoinAdjustment:dollars(bitcoin),cartSubtotal:dollars(subtotal),displayedTotal:dollars(total),evidenceUrl:evidence});
+  feed.records.push({recordReference:id,recordUrl:url,checkedAt:observedAt,status:"accepted",recordType:checkout?"Verified at checkout":(mode==="correction"?"Verified cart-only correction":"Documented cart-only result"),productName:product,currency:"CAD",code:cfg.code,discountAmount:dollars(discount),bitcoinAdjustment:dollars(bitcoin),cartSubtotal:dollars(subtotal),displayedTotal:dollars(total),evidenceUrl:evidence});
 }else{
   if(!Array.isArray(feed.items)) throw Error("growth10_feed_schema_changed");
   feed.items.unshift({id,url:"https://"+cfg.domain+url,title:cfg.code+" verified checkout record",date_published:observedAt,date_modified:now,content_text:product+": "+cfg.code+" reduced a CAD "+dollars(subtotal)+" cart by CAD "+dollars(discount)+" to CAD "+dollars(total)+". No purchase was made.",attachments:[{url:evidence.startsWith("/")?"https://"+cfg.domain+evidence:evidence,title:"Documented original evidence"}]});

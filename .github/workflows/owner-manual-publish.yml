@@ -11,7 +11,11 @@ on:
       observed_eastern:
         type: string
         required: true
-        description: "Actual Eastern observation time: YYYY-MM-DD HH:MM"
+        description: "Eastern observation time: YYYY-MM-DD HH:MM"
+      observed_iso:
+        type: string
+        required: false
+        description: "Exact retained UTC observation timestamp, when available"
       evidence_url:
         type: string
         description: "Existing public evidence link; optional for correction"
@@ -27,6 +31,18 @@ on:
       displayed_total:
         type: string
         description: "CAD total; optional for correction"
+      displayed_shipping:
+        type: string
+        description: "Displayed CAD shipping for checkout observations"
+      payment_method:
+        type: string
+        description: "Displayed payment method for checkout observations"
+      payment_adjustment_label:
+        type: string
+        description: "Displayed non-Bitcoin payment adjustment label"
+      payment_adjustment:
+        type: string
+        description: "Displayed CAD payment-method adjustment"
       product_url:
         type: string
         description: "Verified product URL for this exact record; omit if unverified"
@@ -37,8 +53,8 @@ on:
         type: choice
         required: true
         default: cart-only
-        options: [cart-only]
-        description: "This workflow publishes retained pre-payment cart observations only"
+        options: [cart-only, checkout-payment-screen]
+        description: "Retained pre-payment cart or checkout/payment-screen observation"
       bitcoin_adjustment:
         type: string
         required: true
@@ -92,11 +108,16 @@ jobs:
           SITE_PROFILE: vip10
           PUBLICATION_MODE: ${{ inputs.mode }}
           OBSERVED_EASTERN: ${{ inputs.observed_eastern }}
+          OBSERVED_ISO: ${{ inputs.observed_iso }}
           EVIDENCE_URL: ${{ inputs.evidence_url }}
           PRODUCT_NAME: ${{ inputs.product_name }}
           CART_SUBTOTAL: ${{ inputs.cart_subtotal }}
           DISCOUNT_AMOUNT: ${{ inputs.discount_amount }}
           DISPLAYED_TOTAL: ${{ inputs.displayed_total }}
+          DISPLAYED_SHIPPING: ${{ inputs.displayed_shipping }}
+          PAYMENT_METHOD: ${{ inputs.payment_method }}
+          PAYMENT_ADJUSTMENT_LABEL: ${{ inputs.payment_adjustment_label }}
+          PAYMENT_ADJUSTMENT: ${{ inputs.payment_adjustment }}
           PRODUCT_URL: ${{ inputs.product_url }}
           LINE_ITEMS_JSON: ${{ inputs.line_items_json }}
           OBSERVATION_SCOPE: ${{ inputs.observation_scope }}
